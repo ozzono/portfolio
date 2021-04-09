@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    # mem_limit: 256M user only during development with compose version 2
+    # memswap_limit: '0' user only during development with compose version 2
+    ports: 
+      - '27017:27017'
+      - '28017:28017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: challenge        
+      MONGO_INITDB_ROOT_DATABASE: challenge
+  golang:
+    restart: always
+    container_name: golang
+    build: . 
+    ports: 
+    - "8888:8888"
