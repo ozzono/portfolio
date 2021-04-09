@@ -1,8 +1,8 @@
 # Code Challenges Repo
 
-## In here it's possible to find some of the code-challenges I took a part through out the time.
+## In here it's possible to find some of the code-challenges I took a part through out the time
 
-### Before sharing here, each challenge description had it's requester information removed.
+### Before sharing here, each challenge description had it's requester information removed
 
 Available challenges:
 
