@@ -1,11 +1,11 @@
 package route
 
 import (
-	"api-01/auth"
-	"api-01/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"request/auth"
+	"request/models"
 	"strings"
 )
 

@@ -1,4 +1,4 @@
-module api-01
+module request
 
 go 1.15
 

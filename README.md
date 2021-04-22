@@ -6,6 +6,7 @@
 
 Available challenges:
 
-- [API](./api-01)
+- APIs
+  - [request](./apis/request)
 - [Load Balance](./load-balance-01)
 - [Logic Practice](./logic-practice-01)

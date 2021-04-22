@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+	"os"
 	"testing"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,6 +11,13 @@ import (
 
 const reqDebug = false
 
+func init() {
+	os.Setenv("MONGOHOSTNAME", "localhost")
+	_, err := DefaultDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 func TestAddDelReq(t *testing.T) {
 	req := ActivationRequest{
 		Requestee: primitive.NewObjectID(),

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"api-01/models"
-	"api-01/route"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"request/models"
+	"request/route"
 
 	"github.com/gorilla/mux"
 )

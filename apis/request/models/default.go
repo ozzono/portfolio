@@ -1,16 +1,16 @@
 package models
 
 import (
-	db "api-01/database"
 	"fmt"
+	db "request/database"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const api01DB = "api-01"
+const api01DB = "request"
 
 var DefaultUser = User{
-	Name:     "api-01 Challenge",
+	Name:     "request Challenge",
 	Email:    "challenge@me.more",
 	Password: "winner lottery ticket",
 }

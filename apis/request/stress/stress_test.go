@@ -1,12 +1,12 @@
 package stress
 
 import (
-	"api-01/models"
-	"api-01/requests"
-	"api-01/utils"
 	"fmt"
 	"log"
 	"os"
+	"request/models"
+	"request/requests"
+	"request/utils"
 	"sync"
 	"testing"
 	"time"
@@ -29,14 +29,14 @@ func init() {
 func TestStress(t *testing.T) {
 	userCount := 30
 	reqCount := 1000
-	rps := 100 // requests/s
+	rps := 100 // requests per second
 
 	t.Log("Ping test")
 	if err := requests.Ping(); err != nil {
 		t.Fatal(err)
 	}
 	user := models.User{
-		Name:     "api-01 Challenge",
+		Name:     "request Challenge",
 		Email:    "challenge@me.more",
 		Password: "winner lottery ticket",
 	}

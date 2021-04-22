@@ -1,11 +1,11 @@
 package models
 
 import (
-	db "api-01/database"
-	"api-01/utils"
 	"context"
 	"fmt"
 	"log"
+	db "request/database"
+	"request/utils"
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"

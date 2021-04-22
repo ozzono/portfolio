@@ -1,10 +1,10 @@
 package requests
 
 import (
-	"api-01/models"
-	"api-01/utils"
 	"log"
 	"os"
+	"request/models"
+	"request/utils"
 	"testing"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,7 +16,7 @@ var (
 		Password: "testing time",
 	}
 	startUser = models.User{
-		Name:     "api-01 Challenge",
+		Name:     "request Challenge",
 		Email:    "challenge@me.more",
 		Password: "winner lottery ticket",
 	}

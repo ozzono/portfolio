@@ -6,7 +6,7 @@ Nossa intenção é, através deste (breve) desafio, avaliar a habilidade técni
 
 ## Domínio Problema
 
-Uma instituição financeira contratou os serviços da API-01 buscando maior **agilidade dos dados** através da metrificação de processos que, até então, não eram _observados_ (apropriadamente). Um dos processos é a solicitação do produto débito automático de empresas parceiras.
+Uma instituição financeira contratou os serviços da _api/request_ buscando maior **agilidade dos dados** através da metrificação de processos que, até então, não eram _observados_ (apropriadamente). Um dos processos é a solicitação do produto débito automático de empresas parceiras.
 A operação é realizada manualmente e vai ser automatizada por este serviço, que vai permitir que outros serviços consumam, de forma livre, de seus eventos operacionais.
 
 ## Escopo

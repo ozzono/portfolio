@@ -1,11 +1,11 @@
 package requests
 
 import (
-	"api-01/models"
-	"api-01/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"request/models"
+	"request/utils"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"

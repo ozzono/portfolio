@@ -1,4 +1,4 @@
-# API-01 Code Challenge
+# apis/request Code Challenge
 
 ## **All references to the requester company were omitted.**
 
@@ -28,7 +28,7 @@ Part of the code used in this challenge were inspired by the references linked b
     - I kept the started tool for curiosity;
 
 > All commands should be executed on repository root folder  
-> Each time the project starts or the automated test are executed, the `api-01` database is dropped and recreated with minimal documents.
+> Each time the project starts or the automated test are executed, the `request` database is dropped and recreated with minimal documents.
 > All generated tokens expires after 24h.
 
 ### How to use
@@ -81,56 +81,73 @@ As is, there are similar _CRUD_ methods for `users` and for `requests`.
 
 ### Test output sample
 
-command: `go test -v ./...`
+command: `make test`
 
 ```log
-?   	api-01	[no test files]
+go clean -testcache && docker-compose up -d --build && sleep 2 &&  go test ./... -v && docker-compose down
+Building golang
+Step 1/4 : FROM golang:1.16
+ ---> 0debfc3e0c9e
+Step 2/4 : WORKDIR /request
+ ---> Using cache
+ ---> 7d4b22b2e6ac
+Step 3/4 : COPY ./ /request
+ ---> Using cache
+ ---> 49caac49edc6
+Step 4/4 : CMD go run main.go -docker
+ ---> Using cache
+ ---> 30e855d86a61
+Successfully built 30e855d86a61
+Successfully tagged request_golang:latest
+golang is up-to-date
+mongodb is up-to-date
+?   	request	[no test files]
 === RUN   TestNewToken
 --- PASS: TestNewToken (0.00s)
 === RUN   TestValidateToken
 --- PASS: TestValidateToken (0.00s)
 PASS
-ok  	api-01/auth	
+ok  	request/auth	0.002s
 === RUN   TestDatabase
---- PASS: TestDatabase (0.01s)
+--- PASS: TestDatabase (0.02s)
 PASS
-ok  	api-01/database	
-?   	api-01/ip	[no test files]
+ok  	request/database	0.019s
+?   	request/ip	[no test files]
 === RUN   TestAddDelReq
---- PASS: TestAddDelReq (0.34s)
+--- PASS: TestAddDelReq (0.07s)
 === RUN   TestUpdateReq
---- PASS: TestUpdateReq (0.05s)
+--- PASS: TestUpdateReq (0.06s)
 === RUN   TestAddDelUser
---- PASS: TestAddDelUser (0.93s)
+--- PASS: TestAddDelUser (0.94s)
 === RUN   TestUpdateUser
---- PASS: TestUpdateUser (2.02s)
+--- PASS: TestUpdateUser (2.15s)
 === RUN   TestCheckPassword
---- PASS: TestCheckPassword (2.03s)
+--- PASS: TestCheckPassword (1.89s)
 === RUN   TestUserHashPassword
---- PASS: TestUserHashPassword (0.89s)
+--- PASS: TestUserHashPassword (0.90s)
 PASS
-ok  	api-01/models	
+ok  	request/models	8.007s
 === RUN   TestPing
 --- PASS: TestPing (0.00s)
 === RUN   TestLogin
     request_test.go:48: startUser.Email   : challenge@me.more
     request_test.go:49: startUser.Password: winner lottery ticket
---- PASS: TestLogin (0.96s)
+--- PASS: TestLogin (0.90s)
 === RUN   TestAddUser
---- PASS: TestAddUser (2.91s)
+--- PASS: TestAddUser (2.58s)
 === RUN   TestGetUser
---- PASS: TestGetUser (0.01s)
+--- PASS: TestGetUser (0.29s)
 === RUN   TestUpdateUser
---- PASS: TestUpdateUser (0.89s)
+--- PASS: TestUpdateUser (1.02s)
 === RUN   TestAdd
---- PASS: TestAdd (0.01s)
+--- PASS: TestAdd (0.02s)
 === RUN   TestGet
 --- PASS: TestGet (0.01s)
 === RUN   TestUpdateRequest
 --- PASS: TestUpdateRequest (0.03s)
 PASS
-ok  	api-01/requests	
-?   	api-01/route	[no test files]
+ok  	request/requests	6.864s
+?   	request/route	[no test files]
 === RUN   TestStress
     stress_test.go:34: Ping test
     stress_test.go:43: gimme the token
@@ -140,51 +157,63 @@ ok  	api-01/requests
     stress_test.go:91: 30 available users
     stress_test.go:94: Ready for the first load?
     stress_test.go:123: [0000 of 1000]
-    stress_test.go:123: [0100 of 1000]
     stress_test.go:117: new rps 101
-    stress_test.go:123: [0200 of 1000]
+    stress_test.go:123: [0100 of 1000]
     stress_test.go:117: new rps 102
+    stress_test.go:123: [0200 of 1000]
     stress_test.go:117: new rps 103
     stress_test.go:123: [0300 of 1000]
+    stress_test.go:123: [0400 of 1000]
     stress_test.go:117: new rps 104
     stress_test.go:117: new rps 105
-    stress_test.go:123: [0400 of 1000]
     stress_test.go:123: [0500 of 1000]
     stress_test.go:123: [0600 of 1000]
-    stress_test.go:117: new rps 106
     stress_test.go:123: [0700 of 1000]
     stress_test.go:123: [0800 of 1000]
     stress_test.go:123: [0900 of 1000]
+    stress_test.go:117: new rps 106
     stress_test.go:117: new rps 107
     stress_test.go:127: ok, that was easy
-    stress_test.go:130: 11 reqs were left behind
-    stress_test.go:135: 989 available reqs
+    stress_test.go:130: 9 reqs were left behind
+    stress_test.go:135: 991 available reqs
     stress_test.go:137: Ready for the second load?
-    stress_test.go:159: [0000 of 0989]
-    stress_test.go:159: [0100 of 0989]
     stress_test.go:155: new rps 108
-    stress_test.go:159: [0200 of 0989]
-    stress_test.go:159: [0300 of 0989]
-    stress_test.go:159: [0400 of 0989]
+    stress_test.go:159: [0000 of 0991]
+    stress_test.go:159: [0100 of 0991]
     stress_test.go:155: new rps 109
-    stress_test.go:159: [0500 of 0989]
-    stress_test.go:159: [0600 of 0989]
     stress_test.go:155: new rps 110
+    stress_test.go:159: [0200 of 0991]
     stress_test.go:155: new rps 111
-    stress_test.go:159: [0700 of 0989]
-    stress_test.go:159: [0800 of 0989]
+    stress_test.go:159: [0300 of 0991]
     stress_test.go:155: new rps 112
-    stress_test.go:159: [0900 of 0989]
+    stress_test.go:155: new rps 113
+    stress_test.go:155: new rps 114
+    stress_test.go:159: [0400 of 0991]
+    stress_test.go:159: [0500 of 0991]
+    stress_test.go:155: new rps 115
+    stress_test.go:155: new rps 116
+    stress_test.go:159: [0600 of 0991]
+    stress_test.go:155: new rps 117
+    stress_test.go:159: [0700 of 0991]
+    stress_test.go:159: [0800 of 0991]
+    stress_test.go:159: [0900 of 0991]
     stress_test.go:172: Easy, right?
---- PASS: TestStress (34.68s)
+--- PASS: TestStress (39.08s)
 PASS
-ok  	api-01/stress	36.252s
+ok  	request/stress	41.094s
 === RUN   TestFindHosts
 from [127 0 0 0] to [127 255 255 255]
 from [192 168 1 0] to [192 168 1 255]
+from [192 168 16 0] to [192 168 31 255]
 from [172 17 0 0] to [172 17 255 255]
+from [172 21 0 0] to [172 21 255 255]
 from [172 18 0 0] to [172 18 255 255]
 --- PASS: TestFindHosts (0.00s)
 PASS
-ok  	api-01/utils	
+ok  	request/utils	0.002s
+Stopping golang  ... done
+Stopping mongodb ... done
+Removing golang  ... done
+Removing mongodb ... done
+Removing network request_default
 ```
