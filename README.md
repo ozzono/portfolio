@@ -12,3 +12,4 @@ Available challenges:
   - [swapi](./apis/swapi)
 - [Load Balance](./load-balance-01)
 - [Logic Practice](./logic-practice-01)
+- [Microservices](./microservices)
