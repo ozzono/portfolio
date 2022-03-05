@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  postgresql_ports:
+    image: postgres
+    container_name: ports_postgresql
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_ports=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ports_service
+      - POSTGRES_HOST=5432
+    command: -p 5432
+    # volumes:
+    #   - ports_pgdata:/var/lib/postgresql/data
