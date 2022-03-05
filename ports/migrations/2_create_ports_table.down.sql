@@ -1,0 +1,1 @@
+DROP Table if exists all_ports;
