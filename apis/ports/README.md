@@ -21,7 +21,7 @@ For this challenge I made the following choises:
 - Automatic migrations with go's migration tool, making it possible to fill the database automatically on project build;
 - MVC structure
 
-## What I was not able to do in time
+## What I was not able to do in time (withing 2h)
 
 - Develop the `PortDomainsService` and communicate between both services using gRPC;
 - Make the `ClientAPI` work properly;
@@ -30,7 +30,7 @@ For this challenge I made the following choises:
 
 ## How to run the project
 
-Optimistically there should be a docker for the go services, but I was not able to build it in time, so I'll document how to run the project without it.
+Optimistically there should be a docker for the go services, but I was not able to build it in time (withing 2h), so I'll document how to run the project without it.
 Below are the project requirements:
 
 - docker
@@ -54,11 +54,12 @@ Once the requirements are satisfied, execute the following commands to run the p
 
 ## ports.json import flow
 
-To import the port.json and keep it readilly available without requiring too much resources I decided to store the data in postgres database. Once the json is parsed and its data is stored the json_controlle table would have a column named as `parsed` to avoid parsing the same file multiple times.
+To import the port.json and keep it readilly available without requiring too much resources I decided to store the data in postgres database. Once the json is parsed and its data is stored the json_controller table would have a column named as `parsed` to avoid parsing the same file multiple times.
 
 ## Note
 
-> Most of the code in this project was inspired in previous experiences.
+- Most of the code in this project was inspired in previous experiences.
+- I may have taken about 150m in total, including documentation.
 
 ## Author
 
