@@ -1,6 +1,6 @@
 # Ports API
 
-Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge is not to build and complete the challenge as a whole. Personally I believe it's not doable within 2h with out a code generation tool.
+Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge is not to build and complete the challenge as a whole. Personally I believe it's not doable within 2h without a code generation tool.
 
 ## Table of contents
 
