@@ -12,7 +12,6 @@ Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge 
 - [Note](#note)
 - [Author](#author)
 
-
 ## Choises
 
 For this challenge I made the following choises:
@@ -64,5 +63,6 @@ To import the port.json and keep it readilly available without requiring too muc
 ## Author
 
 👤 **Hugo Virgílio**
-* Github [@ozzono](https://github.com/ozzono)
-* LinkedIn [@hugo-virgilio](https://www.linkedin.com/in/hugo-virgilio/?locale=en_US)
+
+- Github [@ozzono](https://github.com/ozzono)
+- LinkedIn [@hugo-virgilio](https://www.linkedin.com/in/hugo-virgilio/?locale=en_US)
