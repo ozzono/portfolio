@@ -9,7 +9,7 @@ Available challenges:
 - APIs
   - [request](./apis/request)
   - [todolist](./apis/todolist)
-  - [port mngmt](./apis/ports)
+  - [port management](./apis/ports)
   - [swapi](./apis/swapi)
 - [Load Balance](./load-balance-01)
 - [Logic Practice](./logic-practice-01)
