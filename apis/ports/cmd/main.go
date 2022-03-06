@@ -39,5 +39,5 @@ func main() {
 
 	s := server.NewServer(logger, db)
 	logger.Info("starting server")
-	s.Run()
+	logger.Fatal(s.Run())
 }

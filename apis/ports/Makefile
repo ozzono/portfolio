@@ -16,7 +16,7 @@ tidy:
 	go mod tidy
 	go mod download
 
-run
+run:
 	go run cmd/main.go
 
 db:
