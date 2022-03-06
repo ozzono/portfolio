@@ -6,6 +6,7 @@ import (
 	"ports/internal/models"
 	"ports/log"
 
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -58,8 +59,10 @@ func (r repository) Create(ctx context.Context, port models.Port) error {
 
 // CreateBatch saves a batch of new port records in the database.
 func (r repository) CreateBatch(ctx context.Context, ports []models.Port) error {
-	if result := r.db.WithContext(ctx).CreateInBatches(&ports, len(ports)); result.Error != nil {
-		return result.Error
+	r.logger.Infof("creating %d batch registries", len(ports))
+	result := r.db.WithContext(ctx).Table("all_ports").CreateInBatches(ports, len(ports))
+	if result.Error != nil {
+		return errors.Wrap(result.Error, "CreateBatch err -")
 	}
 	return nil
 }

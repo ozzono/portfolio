@@ -15,7 +15,7 @@ import (
 type Service interface {
 	Get(ctx context.Context, id string) (*Port, error)
 	Query(ctx context.Context) ([]*Port, error)
-	Create(ctx context.Context, input CreatePortRequest) (*Port, error)
+	Create(ctx context.Context, input CreatePortRequest) error
 	Update(ctx context.Context, id string, input UpdatePortRequest) (*Port, error)
 	ParseJson(ctx context.Context) error
 	Delete(ctx context.Context, id string) error
@@ -48,7 +48,7 @@ func (m CreatePortRequest) Validate() error {
 
 // UpdatePortRequest represents an Port update request.
 type UpdatePortRequest struct {
-	Id          string        `json:"id"`
+	Id          *int          `json:"id"`
 	Name        string        `json:"name"`
 	City        string        `json:"city"`
 	Country     string        `json:"country"`
@@ -87,13 +87,11 @@ func (s service) Get(ctx context.Context, id string) (*Port, error) {
 }
 
 // Create creates a new Port.
-func (s service) Create(ctx context.Context, req CreatePortRequest) (*Port, error) {
+func (s service) Create(ctx context.Context, req CreatePortRequest) error {
 	if err := req.Validate(); err != nil {
-		return nil, errors.Wrap(err, "req.Validate")
+		return errors.Wrap(err, "req.Validate")
 	}
-	id := models.GenerateID()
 	err := s.repo.Create(ctx, models.Port{
-		Id:          id,
 		Name:        req.Name,
 		City:        req.City,
 		Country:     req.Country,
@@ -106,9 +104,9 @@ func (s service) Create(ctx context.Context, req CreatePortRequest) (*Port, erro
 		Code:        req.Code,
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "service.repo.Create")
+		return errors.Wrap(err, "service.repo.Create")
 	}
-	return s.Get(ctx, id)
+	return nil
 }
 
 // Update updates the Port with the specified ID.
@@ -162,13 +160,16 @@ func (s service) Query(ctx context.Context) ([]*Port, error) {
 
 // Delete deletes the Port with the specified ID.
 func (s service) ParseJson(ctx context.Context) error {
-	p := models.PortsMap{}
-	if err := utils.ReadJson("./ports.json", p); err != nil {
+	p := map[string]models.Port{}
+	if err := utils.ReadJson("ports.json", &p); err != nil {
 		return errors.Wrap(err, "utils.ReadJson")
 	}
-	ports := p.ToPorts()
-	if err := s.repo.CreateBatch(ctx, ports); err != nil {
-		return errors.Wrap(err, "service.repo.CreateBatch")
+	s.logger.Debug(p)
+	if p != nil {
+		ports := models.MapToPorts(p)
+		if err := s.repo.CreateBatch(ctx, ports); err != nil {
+			return errors.Wrap(err, "service.repo.CreateBatch")
+		}
 	}
 	return nil
 }

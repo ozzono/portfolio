@@ -1,27 +1,38 @@
 package models
 
 type Port struct {
-	Id          string        `json:"id"          pg:"id"`
-	Name        string        `json:"name"        pg:"name"`
-	RefName     string        `json:"ref_name"    pg:"ref_name"`
-	City        string        `json:"city"        pg:"city"`
-	Country     string        `json:"country"     pg:"country"`
-	Alias       []interface{} `json:"alias"       pg:"alias"`
-	Regions     []interface{} `json:"regions"     pg:"regions"`
-	Coordinates []float64     `json:"coordinates" pg:"coordinates"`
-	Province    string        `json:"province"    pg:"province"`
-	Timezone    string        `json:"timezone"    pg:"timezone"`
-	Unlocs      []string      `json:"unlocs"      pg:"unlocs"`
-	Code        string        `json:"code"        pg:"code"`
+	Id          *int          `json:"id,omitempty"          gorm:"type:int"`
+	Name        string        `json:"name,omitempty"        gorm:"type:varchar"`
+	RefName     string        `json:"ref_name,omitempty"    gorm:"type:varchar"`
+	City        string        `json:"city,omitempty"        gorm:"type:varchar"`
+	Country     string        `json:"country,omitempty"     gorm:"type:varchar"`
+	Alias       []interface{} `json:"alias,omitempty"       gorm:"type:text[];default:null"`
+	Regions     []interface{} `json:"regions,omitempty"     gorm:"type:text[];default:null"`
+	Coordinates []float64     `json:"coordinates,omitempty" gorm:"type:varchar"`
+	Province    string        `json:"province,omitempty"    gorm:"type:varchar"`
+	Timezone    string        `json:"timezone,omitempty"    gorm:"type:varchar"`
+	Unlocs      []string      `json:"unlocs,omitempty"      gorm:"type:text[];default:null"`
+	Code        string        `json:"code,omitempty"        gorm:"type:varchar"`
 }
 
-type PortsMap map[string]Port
-
-func (pm PortsMap) ToPorts() (ports []Port) {
+func MapToPorts(pm map[string]Port) (ports []Port) {
 	for key := range pm {
 		port := pm[key]
 		port.RefName = key
+
+		if len(port.Alias) == 0 {
+			port.Alias = nil
+		}
+
+		if len(port.Regions) == 0 {
+			port.Regions = nil
+		}
+
+		if len(port.Unlocs) == 0 {
+			port.Unlocs = nil
+		}
 		ports = append(ports, port)
+		return
 	}
 	return
 }

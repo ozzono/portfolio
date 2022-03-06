@@ -83,11 +83,15 @@ func (h *portHandlers) create() gin.HandlerFunc {
 			return
 		}
 
-		port, err := h.svc.Create(c, req)
-		if h.helper.HandleHTTPError(c, http.StatusInternalServerError, "error when creating new port", err) {
+		if h.helper.HandleHTTPError(
+			c,
+			http.StatusInternalServerError,
+			"error when creating new port",
+			h.svc.Create(c, req),
+		) {
 			return
 		}
-		c.JSON(http.StatusOK, port)
+		c.Status(http.StatusOK)
 	}
 }
 
