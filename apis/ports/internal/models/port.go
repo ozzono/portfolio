@@ -15,7 +15,7 @@ type Port struct {
 	Code        string        `json:"code,omitempty"        gorm:"type:varchar"`
 }
 
-func MapToPorts(pm map[string]Port) (ports []Port) {
+func MapToPorts(pm map[string]Port) (ports []*Port) {
 	for key := range pm {
 		port := pm[key]
 		port.RefName = key
@@ -31,7 +31,7 @@ func MapToPorts(pm map[string]Port) (ports []Port) {
 		if len(port.Unlocs) == 0 {
 			port.Unlocs = nil
 		}
-		ports = append(ports, port)
+		ports = append(ports, &port)
 		return
 	}
 	return

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"strconv"
 
 	"ports/internal/models"
 	"ports/log"
@@ -15,8 +16,7 @@ import (
 type Service interface {
 	Get(ctx context.Context, id string) (*Port, error)
 	Query(ctx context.Context) ([]*Port, error)
-	Create(ctx context.Context, input CreatePortRequest) error
-	Update(ctx context.Context, id string, input UpdatePortRequest) (*Port, error)
+	UpSert(ctx context.Context, id string, input UpSertPortRequest) (*Port, error)
 	ParseJson(ctx context.Context) error
 	Delete(ctx context.Context, id string) error
 }
@@ -46,10 +46,11 @@ func (m CreatePortRequest) Validate() error {
 	return validate.Struct(m)
 }
 
-// UpdatePortRequest represents an Port update request.
-type UpdatePortRequest struct {
+// UpSertPortRequest represents an Port upsert request.
+type UpSertPortRequest struct {
 	Id          *int          `json:"id"`
 	Name        string        `json:"name"`
+	RefName     string        `json:"ref_name"`
 	City        string        `json:"city"`
 	Country     string        `json:"country"`
 	Alias       []interface{} `json:"alias"`
@@ -62,7 +63,7 @@ type UpdatePortRequest struct {
 }
 
 // Validate validates the UpdatePortRequest fields.
-func (m UpdatePortRequest) Validate() error {
+func (m UpSertPortRequest) Validate() error {
 	validate := validator.New()
 	return validate.Struct(m)
 }
@@ -79,20 +80,34 @@ func NewService(repo Repository, logger log.Logger) Service {
 
 // Get returns the album with the specified the album ID.
 func (s service) Get(ctx context.Context, id string) (*Port, error) {
-	port, err := s.repo.Get(ctx, id)
+
+	uID, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid id; must be int")
+	}
+
+	port, err := s.repo.Get(ctx, int64(uID))
 	if err != nil {
 		return nil, errors.Wrap(err, "service.repo.Get")
 	}
-	return &Port{port}, nil
+	return &Port{*port}, nil
 }
 
-// Create creates a new Port.
-func (s service) Create(ctx context.Context, req CreatePortRequest) error {
+// UpSert update the port if it already exists or create a new elsewhise
+func (s service) UpSert(ctx context.Context, id string, req UpSertPortRequest) (*Port, error) {
 	if err := req.Validate(); err != nil {
-		return errors.Wrap(err, "req.Validate")
+		return nil, errors.Wrap(err, "req.Validate")
 	}
-	err := s.repo.Create(ctx, models.Port{
+
+	uID, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid id; must be int")
+	}
+
+	port := &models.Port{
+		Id:          &uID,
 		Name:        req.Name,
+		RefName:     req.RefName,
 		City:        req.City,
 		Country:     req.Country,
 		Alias:       req.Alias,
@@ -102,38 +117,12 @@ func (s service) Create(ctx context.Context, req CreatePortRequest) error {
 		Timezone:    req.Timezone,
 		Unlocs:      req.Unlocs,
 		Code:        req.Code,
-	})
-	if err != nil {
-		return errors.Wrap(err, "service.repo.Create")
-	}
-	return nil
-}
-
-// Update updates the Port with the specified ID.
-func (s service) Update(ctx context.Context, id string, req UpdatePortRequest) (*Port, error) {
-	if err := req.Validate(); err != nil {
-		return nil, errors.Wrap(err, "req.Validate")
 	}
 
-	port, err := s.Get(ctx, id)
-	if err != nil {
-		return nil, errors.Wrap(err, "service.Get")
-	}
-	port.Name = req.Name
-	port.City = req.City
-	port.Country = req.Country
-	port.Alias = req.Alias
-	port.Regions = req.Regions
-	port.Coordinates = req.Coordinates
-	port.Province = req.Province
-	port.Timezone = req.Timezone
-	port.Unlocs = req.Unlocs
-	port.Code = req.Code
-
-	if err := s.repo.Update(ctx, port.Port); err != nil {
+	if err := s.repo.UpSert(ctx, port); err != nil {
 		return nil, errors.Wrap(err, "service.repo.Update")
 	}
-	return port, nil
+	return &Port{*port}, nil
 }
 
 // Delete deletes the Port with the specified ID.
@@ -153,7 +142,7 @@ func (s service) Query(ctx context.Context) ([]*Port, error) {
 
 	ports := []*Port{}
 	for i := range p {
-		ports = append(ports, &Port{p[i]})
+		ports = append(ports, &Port{*p[i]})
 	}
 	return ports, nil
 }

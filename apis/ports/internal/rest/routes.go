@@ -4,8 +4,7 @@ package rest
 func (h *portHandlers) MapPortRoutes() {
 	h.group.GET("/port/{id}", h.get())
 	h.group.GET("/port/", h.query())
-	h.group.PUT("/port", h.update())
-	h.group.POST("/port", h.create())
+	h.group.PUT("/port", h.upsert())
 	h.group.DELETE("/port", h.del())
 	h.group.GET("/parse-json", h.parseJson())
 }

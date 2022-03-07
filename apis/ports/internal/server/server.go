@@ -12,7 +12,7 @@ import (
 	"ports/log"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 const (
@@ -22,13 +22,13 @@ const (
 // server
 type server struct {
 	log log.Logger
-	db  *gorm.DB
+	db  *pgxpool.Pool
 	gin *gin.Engine
 }
 
 func NewServer(
 	log log.Logger,
-	db *gorm.DB,
+	db *pgxpool.Pool,
 ) *server {
 	return &server{
 		log: log,

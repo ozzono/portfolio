@@ -76,26 +76,7 @@ func (h *portHandlers) del() gin.HandlerFunc {
 	}
 }
 
-func (h *portHandlers) create() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		req := repository.CreatePortRequest{}
-		if err := c.BindJSON(&req); h.helper.HandleHTTPError(c, http.StatusBadRequest, "invalid request body", err) {
-			return
-		}
-
-		if h.helper.HandleHTTPError(
-			c,
-			http.StatusInternalServerError,
-			"error when creating new port",
-			h.svc.Create(c, req),
-		) {
-			return
-		}
-		c.Status(http.StatusOK)
-	}
-}
-
-func (h *portHandlers) update() gin.HandlerFunc {
+func (h *portHandlers) upsert() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		if id == "" {
@@ -103,12 +84,12 @@ func (h *portHandlers) update() gin.HandlerFunc {
 			return
 		}
 
-		upd := repository.UpdatePortRequest{}
+		upd := repository.UpSertPortRequest{}
 		if err := c.BindJSON(&upd); h.helper.HandleHTTPError(c, http.StatusBadRequest, "invalid request body", err) {
 			return
 		}
 
-		port, err := h.svc.Update(c, id, upd)
+		port, err := h.svc.UpSert(c, id, upd)
 		if h.helper.HandleHTTPError(c, http.StatusInternalServerError, "error when updating port", err) {
 			return
 		}
