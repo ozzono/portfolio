@@ -28,37 +28,23 @@ const (
 		, province    -- 08
 		, timezone    -- 09
 		, unlocs      -- 10
-		, code         -- 11
+		, code        -- 11
 		)
-	VALUES( $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-	ON CONFLICT (name)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+	ON CONFLICT (code)
 	DO UPDATE SET 
-		name          = $2
-		, ref_name    = $3
-		, city        = $4
-		, country     = $5
-		, alias       = $6
-		, regions     = $7
-		, coordinates = $8
-		, province    = $9
-		, timezone    = $10
-		, unlocs      = $11
-		, code        = $12
-	WHERE all_ports.id = $1
-	RETURNING
-		COALESCE (id,NULL)
-		,COALESCE (name,'')
-		,COALESCE (ref_name,'')
-		,COALESCE (city,'')
-		,COALESCE (country,'')
-		,COALESCE (alias,'')
-		,COALESCE (regions,'')
-		,COALESCE (coordinates,'')
-		,COALESCE (province,'')
-		,COALESCE (timezone,'')
-		,COALESCE (unlocs,'')
-		,COALESCE (code,'')
-	;`  // on conflict updates the existing row; create a new one otherwise
+		name          = $1
+		, ref_name    = $2
+		, city        = $3
+		, country     = $4
+		, alias       = $5
+		, regions     = $6
+		, coordinates = $7
+		, province    = $8
+		, timezone    = $9
+		, unlocs      = $10
+	WHERE all_ports.code = $11
+	;`  // on code conflict updates the existing row; create a new one otherwise
 
 	getPortByID = `SELECT 
 		COALESCE  (id        ,NULL)

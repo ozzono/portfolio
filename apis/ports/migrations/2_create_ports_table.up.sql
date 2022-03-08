@@ -1,7 +1,7 @@
 DROP Table IF EXISTS all_ports;
 
 CREATE TABLE IF NOT EXISTS all_ports(
-    id SERIAL NOT NULL PRIMARY KEY,
+    id          SERIAL NOT NULL,
     name        VARCHAR,
     ref_name    VARCHAR,
     city        VARCHAR,
@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS all_ports(
     province    VARCHAR,
     timezone    VARCHAR,
     unlocs      VARCHAR,
-    code        VARCHAR
+    code        VARCHAR PRIMARY KEY
 );

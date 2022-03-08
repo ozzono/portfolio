@@ -146,18 +146,18 @@ func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error
 	batch := &pgx.Batch{}
 	for _, port := range ports {
 		batch.Queue(
-			createPort,
-			port.Name,                         //name
-			port.RefName,                      //ref_name
-			port.City,                         //city
-			port.Country,                      //country
-			models.ToString(port.Alias),       //alias
-			models.ToString(port.Regions),     //regions
-			models.ToString(port.Coordinates), //coordinates
-			port.Province,                     //province
-			port.Timezone,                     //timezone
-			models.ToString(port.Unlocs),      //unlocs
-			port.Code,                         //code
+			upsertPort,
+			port.Name,                         // 01
+			port.RefName,                      // 02
+			port.City,                         // 03
+			port.Country,                      // 04
+			models.ToString(port.Alias),       // 05
+			models.ToString(port.Regions),     // 06
+			models.ToString(port.Coordinates), // 07
+			port.Province,                     // 08
+			port.Timezone,                     // 09
+			models.ToString(port.Unlocs),      // 10
+			port.Code,                         // 11
 		)
 	}
 
