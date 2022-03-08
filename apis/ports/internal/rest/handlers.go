@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -23,11 +24,13 @@ func NewPortHandlers(
 	group *gin.RouterGroup,
 	logger log.Logger,
 	svc repository.Service,
+	helper utils.Helper,
 ) *portHandlers {
 	return &portHandlers{
 		group:  group,
 		logger: logger,
 		svc:    svc,
+		helper: helper,
 	}
 }
 
@@ -39,12 +42,17 @@ var (
 
 func (h *portHandlers) get() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("id")
-		if id == "" {
-			h.helper.HandleHTTPError(c, http.StatusBadRequest, "cannot be empty", errors.New("invalid id"))
+		strID := c.Param("id")
+		if strID == "" {
+			h.helper.HandleHTTPError(c, http.StatusBadRequest, "invalid id", errors.New("cannot be empty"))
 			return
 		}
-		port, err := h.svc.Get(c.Request.Context(), id)
+		_, err := strconv.Atoi(strID)
+		if err != nil {
+			h.helper.HandleHTTPError(c, http.StatusBadRequest, "invalid id", err)
+			return
+		}
+		port, err := h.svc.Get(c.Request.Context(), strID)
 		if h.helper.HandleHTTPError(c, http.StatusInternalServerError, "error when fetching port data", err) {
 			return
 		}
@@ -78,18 +86,13 @@ func (h *portHandlers) del() gin.HandlerFunc {
 
 func (h *portHandlers) upsert() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("id")
-		if id == "" {
-			h.helper.HandleHTTPError(c, http.StatusBadRequest, "cannot be empty", errors.New("invalid id"))
-			return
-		}
 
 		upd := repository.UpSertPortRequest{}
 		if err := c.BindJSON(&upd); h.helper.HandleHTTPError(c, http.StatusBadRequest, "invalid request body", err) {
 			return
 		}
 
-		port, err := h.svc.UpSert(c, id, upd)
+		port, err := h.svc.UpSert(c, upd)
 		if h.helper.HandleHTTPError(c, http.StatusInternalServerError, "error when updating port", err) {
 			return
 		}

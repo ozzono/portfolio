@@ -14,13 +14,13 @@ type Port struct {
 	Timezone       string        `json:"timezone,omitempty"    pg:"type:varchar"`
 	Code           string        `json:"code,omitempty"        pg:"type:varchar"`
 	Alias          []interface{} `json:"alias,omitempty"`         //from json file
-	StrAlias       string        `pg:"type:varchar;default:null"` // into pg
+	strAlias       *string       `pg:"type:varchar;default:null"` // into pg
 	Regions        []interface{} `json:"regions,omitempty"`       //from json file
-	StrRegions     string        `pg:"type:varchar;default:null"` // into pg
+	strRegions     *string       `pg:"type:varchar;default:null"` // into pg
 	Coordinates    []float64     `json:"coordinates,omitempty"`   //from json file
-	StrCoordinates string        `pg:"type:varchar;default:null"` // into pg
+	strCoordinates *string       `pg:"type:varchar;default:null"` // into pg
 	Unlocs         []string      `json:"unlocs,omitempty"`        //from json file
-	StrUnlocs      string        `pg:"type:varchar;default:null"` // into pg
+	strUnlocs      *string       `pg:"type:varchar;default:null"` // into pg
 }
 
 func MapToPorts(pm map[string]Port) (ports []*Port) {
@@ -29,30 +29,32 @@ func MapToPorts(pm map[string]Port) (ports []*Port) {
 		port.RefName = key
 
 		if port.Alias != nil && len(port.Alias) > 0 {
-			port.StrAlias = toString(port.Alias)
+			port.strAlias = ToString(port.Alias)
 		}
 
 		if port.Regions != nil && len(port.Regions) > 0 {
-			port.StrRegions = toString(port.Regions)
+			port.strRegions = ToString(port.Regions)
 		}
 
 		if port.Coordinates != nil && len(port.Coordinates) > 0 {
-			port.StrCoordinates = toString(port.Coordinates)
+			port.strCoordinates = ToString(port.Coordinates)
 		}
 
 		if port.Unlocs != nil && len(port.Unlocs) > 0 {
-			port.StrUnlocs = toString(port.Unlocs)
+			port.strUnlocs = ToString(port.Unlocs)
 		}
 		ports = append(ports, &port)
 	}
 	return
 }
 
-func toString(input interface{}) string {
+func ToString(input interface{}) *string {
 	b, _ := json.MarshalIndent(&input, "", "  ")
-	return string(b)
+	strB := string(b)
+	return &strB
 }
 
-func FromString(input string, output interface{}) {
-	json.Unmarshal([]byte(input), &output)
+func FromString(input *string, output interface{}) {
+	json.Unmarshal([]byte(*input), &output)
+	input = nil
 }

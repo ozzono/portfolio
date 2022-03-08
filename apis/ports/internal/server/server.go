@@ -10,6 +10,7 @@ import (
 	"ports/internal/repository"
 	rest "ports/internal/rest"
 	"ports/pkg/log"
+	"ports/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -44,7 +45,7 @@ func (s server) Run() error {
 	repo := repository.NewRepository(s.db, s.log)
 	svc := repository.NewService(repo, s.log)
 
-	handlers := rest.NewPortHandlers(group, s.log, svc)
+	handlers := rest.NewPortHandlers(group, s.log, svc, utils.Helper{Log: s.log})
 	handlers.MapPortRoutes()
 
 	go func() {

@@ -30,21 +30,21 @@ const (
 		, unlocs      -- 10
 		, code         -- 11
 		)
-	VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-	ON CONFLICT (name, ref_name)
+	VALUES( $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+	ON CONFLICT (name)
 	DO UPDATE SET 
-		name          = $1
-		, ref_name    = $2
-		, city        = $3
-		, country     = $4
-		, alias       = $5
-		, regions     = $6
-		, coordinates = $7
-		, province    = $8
-		, timezone    = $9
-		, unlocs      = $10
-		, code        = $11
-	WHERE all_ports.name = $1 or all_ports.ref_name = $2
+		name          = $2
+		, ref_name    = $3
+		, city        = $4
+		, country     = $5
+		, alias       = $6
+		, regions     = $7
+		, coordinates = $8
+		, province    = $9
+		, timezone    = $10
+		, unlocs      = $11
+		, code        = $12
+	WHERE all_ports.id = $1
 	RETURNING
 		COALESCE (id,NULL)
 		,COALESCE (name,'')
@@ -61,7 +61,7 @@ const (
 	;`  // on conflict updates the existing row; create a new one otherwise
 
 	getPortByID = `SELECT 
-		COALESCE  (i         ,NULL)
+		COALESCE  (id        ,NULL)
 		,COALESCE (name        ,'')
 		,COALESCE (ref_name    ,'')
 		,COALESCE (city        ,'')
@@ -73,7 +73,7 @@ const (
 		,COALESCE (timezone    ,'')
 		,COALESCE (unlocs      ,'')
 		,COALESCE (code        ,'')
-	FROM companies WHERE id = $1;`
+	FROM all_ports WHERE id = $1;`
 
 	delPort = `DELETE FROM all_ports WHERE id=$1;`
 

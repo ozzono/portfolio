@@ -9,6 +9,7 @@ import (
 	"ports/utils"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 )
 
@@ -16,7 +17,7 @@ import (
 type Service interface {
 	Get(ctx context.Context, id string) (*Port, error)
 	Query(ctx context.Context) ([]*Port, error)
-	UpSert(ctx context.Context, id string, input UpSertPortRequest) (*Port, error)
+	UpSert(ctx context.Context, input UpSertPortRequest) (*Port, error)
 	ParseJson(ctx context.Context) error
 	Delete(ctx context.Context, id string) error
 }
@@ -87,25 +88,26 @@ func (s service) Get(ctx context.Context, id string) (*Port, error) {
 	}
 
 	port, err := s.repo.Get(ctx, int64(uID))
-	if err != nil {
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, errors.Errorf("port with id %d not found", uID)
+	} else if err != nil {
 		return nil, errors.Wrap(err, "service.repo.Get")
 	}
 	return &Port{*port}, nil
 }
 
 // UpSert update the port if it already exists or create a new elsewhise
-func (s service) UpSert(ctx context.Context, id string, req UpSertPortRequest) (*Port, error) {
+func (s service) UpSert(ctx context.Context, req UpSertPortRequest) (*Port, error) {
 	if err := req.Validate(); err != nil {
 		return nil, errors.Wrap(err, "req.Validate")
 	}
 
-	uID, err := strconv.Atoi(id)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid id; must be int")
+	if req.Id == nil {
+		return nil, errors.New("invalid id; cannot be empty")
 	}
 
 	port := &models.Port{
-		Id:          &uID,
+		Id:          req.Id,
 		Name:        req.Name,
 		RefName:     req.RefName,
 		City:        req.City,

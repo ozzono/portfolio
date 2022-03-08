@@ -48,28 +48,35 @@ func NewRepository(db *pgxpool.Pool, logger log.Logger) Repository {
 
 // Get reads the port with the specified ID from the database.
 func (r repository) Get(ctx context.Context, id int64) (*models.Port, error) {
-	var res models.Port
+	var (
+		res            models.Port
+		strAlias       string
+		strRegions     string
+		strCoordinates string
+		strUnlocs      string
+	)
 
 	if err := r.db.QueryRow(ctx, getPortByID, id).Scan(
+		&res.Id,
 		&res.Name,
 		&res.RefName,
 		&res.City,
 		&res.Country,
-		&res.StrAlias,
-		&res.StrRegions,
-		&res.StrCoordinates,
+		&strAlias,
+		&strRegions,
+		&strCoordinates,
 		&res.Province,
 		&res.Timezone,
-		&res.StrUnlocs,
+		&strUnlocs,
 		&res.Code,
 	); err != nil {
 		return nil, errors.Wrap(err, "repository.db.QueryRow")
 	}
 
-	models.FromString(res.StrAlias, res.Alias)
-	models.FromString(res.StrRegions, res.Regions)
-	models.FromString(res.StrCoordinates, res.Coordinates)
-	models.FromString(res.StrUnlocs, res.Unlocs)
+	models.FromString(&strAlias, &res.Alias)
+	models.FromString(&strRegions, &res.Regions)
+	models.FromString(&strCoordinates, &res.Coordinates)
+	models.FromString(&strUnlocs, &res.Unlocs)
 
 	return &res, nil
 }
@@ -92,16 +99,17 @@ func (r repository) ParsedJson(ctx context.Context) (bool, error) {
 // UpSert update the port if it already exists or create a new elsewhise
 func (r repository) UpSert(ctx context.Context, port *models.Port) error {
 	if _, err := r.db.Exec(ctx, upsertPort,
+		port.Id,
 		port.Name,
 		port.RefName,
 		port.City,
 		port.Country,
-		port.StrAlias,
-		port.StrRegions,
-		port.StrCoordinates,
+		models.ToString(port.Alias),
+		models.ToString(port.Regions),
+		models.ToString(port.Coordinates),
 		port.Province,
 		port.Timezone,
-		port.StrUnlocs,
+		models.ToString(port.Unlocs),
 		port.Code,
 	); err != nil {
 		return errors.Wrap(err, "repository.db.Exec")
@@ -139,17 +147,17 @@ func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error
 	for _, port := range ports {
 		batch.Queue(
 			createPort,
-			port.Name,           //name
-			port.RefName,        //ref_name
-			port.City,           //city
-			port.Country,        //country
-			port.StrAlias,       //alias
-			port.StrRegions,     //regions
-			port.StrCoordinates, //coordinates
-			port.Province,       //province
-			port.Timezone,       //timezone
-			port.StrUnlocs,      //unlocs
-			port.Code,           //code
+			port.Name,                         //name
+			port.RefName,                      //ref_name
+			port.City,                         //city
+			port.Country,                      //country
+			models.ToString(port.Alias),       //alias
+			models.ToString(port.Regions),     //regions
+			models.ToString(port.Coordinates), //coordinates
+			port.Province,                     //province
+			port.Timezone,                     //timezone
+			models.ToString(port.Unlocs),      //unlocs
+			port.Code,                         //code
 		)
 	}
 
@@ -185,38 +193,44 @@ func (r repository) Query(ctx context.Context) ([]*models.Port, error) {
 	res := []*models.Port{}
 
 	for rows.Next() {
-		var port models.Port
+		var (
+			port           models.Port
+			strAlias       string
+			strRegions     string
+			strCoordinates string
+			strUnlocs      string
+		)
 		if err := rows.Scan(
 			&port.Id,
 			&port.Name,
 			&port.RefName,
 			&port.City,
 			&port.Country,
-			&port.StrAlias,
-			&port.StrRegions,
-			&port.StrCoordinates,
+			&strAlias,
+			&strRegions,
+			&strCoordinates,
 			&port.Province,
 			&port.Timezone,
-			&port.StrUnlocs,
+			&strUnlocs,
 			&port.Code,
 		); err != nil {
 			return nil, errors.Wrap(err, "Scan")
 		}
 
-		if port.StrAlias != "" {
-			models.FromString(port.StrAlias, &port.Alias)
+		if strAlias != "" {
+			models.FromString(&strAlias, &port.Alias)
 		}
 
-		if port.StrRegions != "" {
-			models.FromString(port.StrRegions, &port.Regions)
+		if strRegions != "" {
+			models.FromString(&strRegions, &port.Regions)
 		}
 
-		if port.StrCoordinates != "" {
-			models.FromString(port.StrCoordinates, &port.Coordinates)
+		if strCoordinates != "" {
+			models.FromString(&strCoordinates, &port.Coordinates)
 		}
 
-		if port.StrUnlocs != "" {
-			models.FromString(port.StrUnlocs, &port.Unlocs)
+		if strUnlocs != "" {
+			models.FromString(&strUnlocs, &port.Unlocs)
 		}
 		res = append(res, &port)
 	}
