@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS all_ports(
     regions     VARCHAR,
     coordinates VARCHAR,
     province    VARCHAR,
-    timezone    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    timezone    VARCHAR,
     unlocs      VARCHAR,
     code        VARCHAR
 );

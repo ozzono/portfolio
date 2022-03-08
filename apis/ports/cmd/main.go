@@ -3,30 +3,30 @@ package main
 import (
 	"context"
 	"ports/internal/server"
-	"ports/log"
+	"ports/pkg/log"
 	"ports/pkg/postgres"
 )
 
 const (
-	Version            = "1.0.0"
-	PostgresqlUser     = "postgres"
-	PostgresqlPassword = "postgres"
-	PostgresqlHost     = "localhost"
-	PostgresqlPort     = "5432"
-	PostgresqlDBName   = "ports_service"
-	PostgresqlSSLMode  = "disable"
+	Version    = "1.0.0"
+	pgUser     = "postgres"
+	pgPassword = "postgres"
+	pgHost     = "localhost"
+	pgPort     = "5432"
+	pgDBName   = "ports_service"
+	pgSSLMode  = "disable"
 )
 
 func main() {
 	logger := log.New().With(context.TODO(), "version", Version)
 
 	pgxConn, err := postgres.NewPgxConn(postgres.Config{
-		Host:     PostgresqlUser,
-		Port:     PostgresqlPassword,
-		User:     PostgresqlHost,
-		DBNAme:   PostgresqlPort,
-		SSLMode:  PostgresqlDBName,
-		Password: PostgresqlSSLMode,
+		Host:     pgHost,
+		Port:     pgPort,
+		User:     pgUser,
+		DBNAme:   pgDBName,
+		SSLMode:  pgSSLMode,
+		Password: pgPassword,
 	})
 	if err != nil {
 		logger.Fatal("cannot connect to postgres", err)

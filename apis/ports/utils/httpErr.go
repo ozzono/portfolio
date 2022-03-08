@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"ports/internal/models"
-	"ports/log"
+	"ports/pkg/log"
 
 	"github.com/gin-gonic/gin"
 )

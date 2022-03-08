@@ -2,17 +2,17 @@ package repository
 
 const (
 	createPort = `INSERT INTO all_ports (
-		Name,        -- 01
-		RefName,     -- 02
-		City,        -- 03
-		Country,     -- 04
-		Alias,       -- 05
-		Regions,     -- 06
-		Coordinates, -- 07
-		Province,    -- 08
-		Timezone,    -- 09
-		Unlocs,      -- 10
-		Code         -- 11
+		name,        -- 01
+		ref_name,    -- 02
+		city,        -- 03
+		country,     -- 04
+		alias,       -- 05
+		regions,     -- 06
+		coordinates, -- 07
+		province,    -- 08
+		timezone,    -- 09
+		unlocs,      -- 10
+		code         -- 11
 	) values (
 		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
 	);`
@@ -77,5 +77,7 @@ const (
 
 	delPort = `DELETE FROM all_ports WHERE id=$1;`
 
-	allPorts = `SELECT * FROM all_ports;`
+	allPorts   = `SELECT * FROM all_ports;`
+	jsonParsed = `SELECT parsed FROM json_control limit 1;`
+	setParsed  = `INSERT INTO json_control (parsed) VALUES ($1)`
 )

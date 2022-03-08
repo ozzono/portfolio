@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"ports/internal/models"
-	"ports/log"
+	"ports/pkg/log"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -24,6 +24,12 @@ type Repository interface {
 
 	// Create saves a new port in the storage.
 	CreateBatch(ctx context.Context, ports []*models.Port) error
+
+	// ParsedJson verifies if the json file was parsed and added to the database.
+	ParsedJson(ctx context.Context) (bool, error)
+
+	// SetParsed sets the json control as parsed avoiding multiple parsing.
+	SetParsed(ctx context.Context) error
 
 	// Delete removes the port with given ID from the storage.
 	Delete(ctx context.Context, id string) error
@@ -49,18 +55,38 @@ func (r repository) Get(ctx context.Context, id int64) (*models.Port, error) {
 		&res.RefName,
 		&res.City,
 		&res.Country,
-		&res.Alias,
-		&res.Regions,
-		&res.Coordinates,
+		&res.StrAlias,
+		&res.StrRegions,
+		&res.StrCoordinates,
 		&res.Province,
 		&res.Timezone,
-		&res.Unlocs,
+		&res.StrUnlocs,
 		&res.Code,
 	); err != nil {
-		return nil, errors.Wrap(err, "Scan")
+		return nil, errors.Wrap(err, "repository.db.QueryRow")
 	}
 
+	models.FromString(res.StrAlias, res.Alias)
+	models.FromString(res.StrRegions, res.Regions)
+	models.FromString(res.StrCoordinates, res.Coordinates)
+	models.FromString(res.StrUnlocs, res.Unlocs)
+
 	return &res, nil
+}
+
+// Get reads the port with the specified ID from the database.
+func (r repository) ParsedJson(ctx context.Context) (bool, error) {
+	parsed := false
+
+	if err := r.db.QueryRow(ctx, jsonParsed).Scan(
+		&parsed,
+	); errors.Is(pgx.ErrNoRows, err) {
+		return false, nil
+	} else if err != nil {
+		return false, errors.Wrap(err, "repository.db.QueryRow.Scan")
+	}
+
+	return parsed, nil
 }
 
 // UpSert update the port if it already exists or create a new elsewhise
@@ -70,13 +96,23 @@ func (r repository) UpSert(ctx context.Context, port *models.Port) error {
 		port.RefName,
 		port.City,
 		port.Country,
-		port.Alias,
-		port.Regions,
-		port.Coordinates,
+		port.StrAlias,
+		port.StrRegions,
+		port.StrCoordinates,
 		port.Province,
 		port.Timezone,
-		port.Unlocs,
+		port.StrUnlocs,
 		port.Code,
+	); err != nil {
+		return errors.Wrap(err, "repository.db.Exec")
+	}
+	return nil
+}
+
+// SetParsed sets the json control as parsed avoiding multiple parsing.
+func (r repository) SetParsed(ctx context.Context) error {
+	if _, err := r.db.Exec(ctx, setParsed,
+		true,
 	); err != nil {
 		return errors.Wrap(err, "repository.db.Exec")
 	}
@@ -103,17 +139,17 @@ func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error
 	for _, port := range ports {
 		batch.Queue(
 			createPort,
-			port.Name,
-			port.RefName,
-			port.City,
-			port.Country,
-			port.Alias,
-			port.Regions,
-			port.Coordinates,
-			port.Province,
-			port.Timezone,
-			port.Unlocs,
-			port.Code,
+			port.Name,           //name
+			port.RefName,        //ref_name
+			port.City,           //city
+			port.Country,        //country
+			port.StrAlias,       //alias
+			port.StrRegions,     //regions
+			port.StrCoordinates, //coordinates
+			port.Province,       //province
+			port.Timezone,       //timezone
+			port.StrUnlocs,      //unlocs
+			port.Code,           //code
 		)
 	}
 
@@ -133,7 +169,7 @@ func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error
 
 // Delete deletes a port with the specified ID from the database.
 func (r repository) Delete(ctx context.Context, id string) error {
-	if _, err := r.db.Exec(ctx, upsertPort, id); err != nil {
+	if _, err := r.db.Exec(ctx, delPort, id); err != nil {
 		return errors.Wrap(err, "repository.db.Exec")
 	}
 	return nil
@@ -156,15 +192,31 @@ func (r repository) Query(ctx context.Context) ([]*models.Port, error) {
 			&port.RefName,
 			&port.City,
 			&port.Country,
-			&port.Alias,
-			&port.Regions,
-			&port.Coordinates,
+			&port.StrAlias,
+			&port.StrRegions,
+			&port.StrCoordinates,
 			&port.Province,
 			&port.Timezone,
-			&port.Unlocs,
+			&port.StrUnlocs,
 			&port.Code,
 		); err != nil {
 			return nil, errors.Wrap(err, "Scan")
+		}
+
+		if port.StrAlias != "" {
+			models.FromString(port.StrAlias, &port.Alias)
+		}
+
+		if port.StrRegions != "" {
+			models.FromString(port.StrRegions, &port.Regions)
+		}
+
+		if port.StrCoordinates != "" {
+			models.FromString(port.StrCoordinates, &port.Coordinates)
+		}
+
+		if port.StrUnlocs != "" {
+			models.FromString(port.StrUnlocs, &port.Unlocs)
 		}
 		res = append(res, &port)
 	}

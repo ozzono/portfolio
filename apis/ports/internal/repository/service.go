@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"ports/internal/models"
-	"ports/log"
+	"ports/pkg/log"
 	"ports/utils"
 
 	"github.com/go-playground/validator/v10"
@@ -153,11 +153,20 @@ func (s service) ParseJson(ctx context.Context) error {
 	if err := utils.ReadJson("ports.json", &p); err != nil {
 		return errors.Wrap(err, "utils.ReadJson")
 	}
-	s.logger.Debug(p)
 	if p != nil {
+
+		if parsed, err := s.repo.ParsedJson(ctx); err != nil {
+			return errors.Wrap(err, "service.repo.ParsedJson")
+		} else if parsed {
+			s.logger.Info("json file already parsed")
+			return nil
+		}
+
 		ports := models.MapToPorts(p)
 		if err := s.repo.CreateBatch(ctx, ports); err != nil {
 			return errors.Wrap(err, "service.repo.CreateBatch")
+		} else if err := s.repo.SetParsed(ctx); err != nil {
+			return errors.Wrap(err, "service.repo.SetParsed")
 		}
 	}
 	return nil
