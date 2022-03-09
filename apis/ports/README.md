@@ -42,6 +42,8 @@ make run
 
 > All new executions starts with clean database; to add data from json file visit [localhost:8000/challenge/parse-json](localhost:8000/challenge/parse-json).
 
+Run `make stop` to interrupt the services.
+
 ## Available routes
 
 - **GET**: localhost:8000/challenge/ports/
