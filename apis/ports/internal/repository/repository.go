@@ -16,10 +16,13 @@ type Repository interface {
 	// Get returns the port with the specified port ID.
 	Get(ctx context.Context, id int64) (*models.Port, error)
 
+	// GetByCode returns the port with the specified port code.
+	GetByCode(ctx context.Context, code string) (*models.Port, error)
+
 	// Query returns the list of all ports.
 	Query(ctx context.Context) ([]*models.Port, error)
 
-	// Create saves a new port in the storage.
+	// UpSert update the port if it already exists or create a new elsewhise
 	UpSert(ctx context.Context, port *models.Port) error
 
 	// Create saves a new port in the storage.
@@ -48,6 +51,7 @@ func NewRepository(db *pgxpool.Pool, logger log.Logger) Repository {
 
 // Get reads the port with the specified ID from the database.
 func (r repository) Get(ctx context.Context, id int64) (*models.Port, error) {
+	r.logger.Infof("fetching port from id: %d", id)
 	var (
 		res            models.Port
 		strAlias       string
@@ -57,18 +61,18 @@ func (r repository) Get(ctx context.Context, id int64) (*models.Port, error) {
 	)
 
 	if err := r.db.QueryRow(ctx, getPortByID, id).Scan(
-		&res.Id,
-		&res.Name,
-		&res.RefName,
-		&res.City,
-		&res.Country,
-		&strAlias,
-		&strRegions,
-		&strCoordinates,
-		&res.Province,
-		&res.Timezone,
-		&strUnlocs,
-		&res.Code,
+		&res.Id,         // 01
+		&res.Name,       // 02
+		&res.RefName,    // 03
+		&res.City,       // 04
+		&res.Country,    // 05
+		&strAlias,       // 06
+		&strRegions,     // 07
+		&strCoordinates, // 08
+		&res.Province,   // 09
+		&res.Timezone,   // 10
+		&strUnlocs,      // 11
+		&res.Code,       // 12
 	); err != nil {
 		return nil, errors.Wrap(err, "repository.db.QueryRow")
 	}
@@ -82,7 +86,44 @@ func (r repository) Get(ctx context.Context, id int64) (*models.Port, error) {
 }
 
 // Get reads the port with the specified ID from the database.
+func (r repository) GetByCode(ctx context.Context, code string) (*models.Port, error) {
+	r.logger.Infof("fetching port from id: %s", code)
+	var (
+		res            models.Port
+		strAlias       string
+		strRegions     string
+		strCoordinates string
+		strUnlocs      string
+	)
+
+	if err := r.db.QueryRow(ctx, getPortByCode, code).Scan(
+		&res.Id,         // 01
+		&res.Name,       // 02
+		&res.RefName,    // 03
+		&res.City,       // 04
+		&res.Country,    // 05
+		&strAlias,       // 06
+		&strRegions,     // 07
+		&strCoordinates, // 08
+		&res.Province,   // 09
+		&res.Timezone,   // 10
+		&strUnlocs,      // 11
+		&res.Code,       // 12
+	); err != nil {
+		return nil, errors.Wrap(err, "repository.db.QueryRow")
+	}
+
+	models.FromString(&strAlias, &res.Alias)
+	models.FromString(&strRegions, &res.Regions)
+	models.FromString(&strCoordinates, &res.Coordinates)
+	models.FromString(&strUnlocs, &res.Unlocs)
+
+	return &res, nil
+}
+
+// Parsed data from json file into database
 func (r repository) ParsedJson(ctx context.Context) (bool, error) {
+	r.logger.Infof("parsing json data")
 	parsed := false
 
 	if err := r.db.QueryRow(ctx, jsonParsed).Scan(
@@ -98,19 +139,19 @@ func (r repository) ParsedJson(ctx context.Context) (bool, error) {
 
 // UpSert update the port if it already exists or create a new elsewhise
 func (r repository) UpSert(ctx context.Context, port *models.Port) error {
+	r.logger.Infof("upserting %s port", port.Name)
 	if _, err := r.db.Exec(ctx, upsertPort,
-		port.Id,
-		port.Name,
-		port.RefName,
-		port.City,
-		port.Country,
-		models.ToString(port.Alias),
-		models.ToString(port.Regions),
-		models.ToString(port.Coordinates),
-		port.Province,
-		port.Timezone,
-		models.ToString(port.Unlocs),
-		port.Code,
+		port.Name,                         // 01
+		port.RefName,                      // 02
+		port.City,                         // 03
+		port.Country,                      // 04
+		models.ToString(port.Alias),       // 05
+		models.ToString(port.Regions),     // 06
+		models.ToString(port.Coordinates), // 07
+		port.Province,                     // 08
+		port.Timezone,                     // 09
+		models.ToString(port.Unlocs),      // 10
+		port.Code,                         // 11
 	); err != nil {
 		return errors.Wrap(err, "repository.db.Exec")
 	}
@@ -119,6 +160,7 @@ func (r repository) UpSert(ctx context.Context, port *models.Port) error {
 
 // SetParsed sets the json control as parsed avoiding multiple parsing.
 func (r repository) SetParsed(ctx context.Context) error {
+	r.logger.Info("setting json control as parsed")
 	if _, err := r.db.Exec(ctx, setParsed,
 		true,
 	); err != nil {
@@ -129,6 +171,7 @@ func (r repository) SetParsed(ctx context.Context) error {
 
 // CreateBatch saves a batch of new port records in the database.
 func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error {
+	r.logger.Infof("batch inserting %d ports", len(ports))
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -177,6 +220,7 @@ func (r repository) CreateBatch(ctx context.Context, ports []*models.Port) error
 
 // Delete deletes a port with the specified ID from the database.
 func (r repository) Delete(ctx context.Context, id string) error {
+	r.logger.Infof("deleting port id: %s", id)
 	if _, err := r.db.Exec(ctx, delPort, id); err != nil {
 		return errors.Wrap(err, "repository.db.Exec")
 	}
@@ -185,6 +229,7 @@ func (r repository) Delete(ctx context.Context, id string) error {
 
 // Query retrieves the port records with the specified offset and limit from the database.
 func (r repository) Query(ctx context.Context) ([]*models.Port, error) {
+	r.logger.Info("fetching all ports")
 	rows, err := r.db.Query(ctx, allPorts)
 	if err != nil {
 		return nil, errors.Wrap(err, "repository.db.Query")
@@ -234,5 +279,6 @@ func (r repository) Query(ctx context.Context) ([]*models.Port, error) {
 		}
 		res = append(res, &port)
 	}
+	r.logger.Infof("returning %d ports", len(res))
 	return res, err
 }

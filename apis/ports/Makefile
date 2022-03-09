@@ -22,7 +22,7 @@ tidy:
 	go mod download
 
 run:
-	docker-compose up -d --build --remove-orphans && docker exec ports_golang sh /ports/migrate.sh
+	docker-compose up -d --build --remove-orphans && sleep 1 && docker exec ports_golang sh /ports/migrate.sh
 
 stop:
 	docker-compose down

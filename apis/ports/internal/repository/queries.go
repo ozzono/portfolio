@@ -47,19 +47,34 @@ const (
 	;`  // on code conflict updates the existing row; create a new one otherwise
 
 	getPortByID = `SELECT 
-		COALESCE  (id        ,NULL)
-		,COALESCE (name        ,'')
-		,COALESCE (ref_name    ,'')
-		,COALESCE (city        ,'')
-		,COALESCE (country     ,'')
-		,COALESCE (alias       ,'')
-		,COALESCE (regions     ,'')
-		,COALESCE (coordinates ,'')
-		,COALESCE (province    ,'')
-		,COALESCE (timezone    ,'')
-		,COALESCE (unlocs      ,'')
-		,COALESCE (code        ,'')
+		COALESCE  (id        ,NULL) -- 01
+		,COALESCE (name        ,'') -- 02
+		,COALESCE (ref_name    ,'') -- 03
+		,COALESCE (city        ,'') -- 04
+		,COALESCE (country     ,'') -- 05
+		,COALESCE (alias       ,'') -- 06
+		,COALESCE (regions     ,'') -- 07
+		,COALESCE (coordinates ,'') -- 08
+		,COALESCE (province    ,'') -- 09
+		,COALESCE (timezone    ,'') -- 10
+		,COALESCE (unlocs      ,'') -- 11
+		,COALESCE (code        ,'') -- 12
 	FROM all_ports WHERE id = $1;`
+
+	getPortByCode = `SELECT 
+		COALESCE  (id        ,NULL) -- 01
+		,COALESCE (name        ,'') -- 02
+		,COALESCE (ref_name    ,'') -- 03
+		,COALESCE (city        ,'') -- 04
+		,COALESCE (country     ,'') -- 05
+		,COALESCE (alias       ,'') -- 06
+		,COALESCE (regions     ,'') -- 07
+		,COALESCE (coordinates ,'') -- 08
+		,COALESCE (province    ,'') -- 09
+		,COALESCE (timezone    ,'') -- 10
+		,COALESCE (unlocs      ,'') -- 11
+		,COALESCE (code        ,'') -- 12
+	FROM all_ports WHERE code = $1;`
 
 	delPort = `DELETE FROM all_ports WHERE id=$1;`
 

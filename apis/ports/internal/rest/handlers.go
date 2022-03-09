@@ -60,6 +60,18 @@ func (h *portHandlers) get() gin.HandlerFunc {
 	}
 }
 
+func (h *portHandlers) getByCode() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		code := c.Param("code")
+
+		port, err := h.svc.GetByCode(c.Request.Context(), code)
+		if h.helper.HandleHTTPError(c, http.StatusInternalServerError, "error when fetching port data", err) {
+			return
+		}
+		c.JSON(http.StatusOK, port)
+	}
+}
+
 func (h *portHandlers) query() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		port, err := h.svc.Query(c.Request.Context())

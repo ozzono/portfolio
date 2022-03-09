@@ -13,9 +13,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Service encapsulates usecase logic for albums.
+// Service encapsulates usecase logic for ports.
 type Service interface {
 	Get(ctx context.Context, id string) (*Port, error)
+	GetByCode(ctx context.Context, id string) (*Port, error)
 	Query(ctx context.Context) ([]*Port, error)
 	UpSert(ctx context.Context, input UpSertPortRequest) (*Port, error)
 	ParseJson(ctx context.Context) error
@@ -74,12 +75,12 @@ type service struct {
 	logger log.Logger
 }
 
-// NewService creates a new album service.
+// NewService creates a new port service.
 func NewService(repo Repository, logger log.Logger) Service {
 	return service{repo, logger}
 }
 
-// Get returns the album with the specified the album ID.
+// Get returns the port with the specified the port ID.
 func (s service) Get(ctx context.Context, id string) (*Port, error) {
 
 	uID, err := strconv.Atoi(id)
@@ -96,10 +97,21 @@ func (s service) Get(ctx context.Context, id string) (*Port, error) {
 	return &Port{*port}, nil
 }
 
+// GetByCode returns the port with the specified port ID.
+func (s service) GetByCode(ctx context.Context, code string) (*Port, error) {
+	port, err := s.repo.GetByCode(ctx, code)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, errors.Errorf("port with code %s not found", code)
+	} else if err != nil {
+		return nil, errors.Wrap(err, "service.repo.Get")
+	}
+	return &Port{*port}, nil
+}
+
 // UpSert update the port if it already exists or create a new elsewhise
 func (s service) UpSert(ctx context.Context, req UpSertPortRequest) (*Port, error) {
 	if err := req.Validate(); err != nil {
-		return nil, errors.Wrap(err, "req.Validate")
+		return nil, errors.Wrap(err, "req.UpSert")
 	}
 
 	if req.Id == nil {
