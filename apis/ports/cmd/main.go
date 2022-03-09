@@ -11,7 +11,7 @@ const (
 	Version    = "1.0.0"
 	pgUser     = "postgres"
 	pgPassword = "postgres"
-	pgHost     = "localhost"
+	pgHost     = "ports_postgresql"
 	pgPort     = "5432"
 	pgDBName   = "ports_service"
 	pgSSLMode  = "disable"

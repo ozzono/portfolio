@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  postgresql_ports:
+  ports_postgresql:
     image: postgres
     container_name: ports_postgresql
     expose:
@@ -15,5 +15,8 @@ services:
       - POSTGRES_DB=ports_service
       - POSTGRES_HOST=5432
     command: -p 5432
-    # volumes:
-    #   - ports_pgdata:/var/lib/postgresql/data
+  golang:
+    container_name: ports_golang
+    build: . 
+    ports: 
+    - "8000:8000"

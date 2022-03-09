@@ -54,7 +54,7 @@ Once the requirements are satisfied, execute the following commands to run the p
 
 ## ports.json import flow
 
-To import the port.json and keep it readilly available without requiring too much resources I decided to store the data in postgres database. Once the json is parsed and its data is stored the json_controller table would have a column named as `parsed` to avoid parsing the same file multiple times.
+To import the port.json and keep it readilly available without requiring too much resources I decided to store the data in postgres database. Once the json is parsed and its data is stored, the json_controller table would have a column named as `parsed` to avoid parsing the same file multiple times.
 
 ## Note
 

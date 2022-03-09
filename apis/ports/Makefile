@@ -10,6 +10,11 @@ migrate-up:
 migrate-down:
 	migrate -path migrations -database "postgresql://postgres:postgres@localhost:5432/ports_service?sslmode=disable" -verbose down
 
+migrate-drop:
+	migrate -path migrations -database "postgresql://postgres:postgres@localhost:5432/ports_service?sslmode=disable" -verbose drop -f
+
+migrate-fresh:
+	make migrate-drop && make migrate-up
 
 # Download go packages
 tidy:
@@ -17,8 +22,7 @@ tidy:
 	go mod download
 
 run:
-	go run cmd/main.go
+	docker-compose up -d --build --remove-orphans && docker exec ports_golang sh /ports/migrate.sh
 
-db:
-	docker-compose up -d
-
+stop:
+	docker-compose down
