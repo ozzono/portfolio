@@ -6,8 +6,8 @@ Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge 
 
 - [Choises](#choises)
 - [What I was not able to do in time](#what-i-was-not-able-to-do-in-time)
-- [How to run the project](#how-to-run-the-project)
 - [Running the project](#running-the-project)
+- [Available Routes](#available-routes)
 - [ports.json import flow](#portsjson-import-flow)
 - [Note](#note)
 - [Author](#author)
@@ -28,29 +28,34 @@ For this challenge I made the following choises:
 - Develop automated tests for both services;
 - Graceful shutdown;
 
-## How to run the project
+## Running the project
 
-Optimistically there should be a docker for the go services, but I was not able to build it in time (withing 2h), so I'll document how to run the project without it.
-Below are the project requirements:
-
-- docker
-- docker-compose
-- go >=1.16
-- Run the `go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest` to install the `migrate` CLI tool to run the migrations
-- git CLI
-
-### Running the project
-
-Once the requirements are satisfied, execute the following commands to run the project:
+This project has as only requirements the docker CLI. One could clone the repo or download and unzip it.
 
 ```shell
-~ git clone https://github.com/ozzono/challenges.git
-~ cd challenges/apis/ports 
-~ make db          # builds the postgres container
-~ make migrate_up  # creates the needed tables
-~ make tidy        # download package dependencies
-~ make run         # runs the project locally
+git clone https://github.com/ozzono/challenges.git
+cd challenges/api/ports
+git checkout unrestricted-timeframe
+make run
 ```
+> `make run` will download the needed images; deploy the database and the golang server and add needed database strucure into postgres container.
+
+> All new executions starts with clean database; to add data from json file visit [localhost:8000/challenge/parse-json](localhost:8000/challenge/parse-json).
+
+## Available routes
+
+- **GET**: localhost:8000/challenge/ports/
+  - fetches all ports in the database
+- **GET**: localhost:8000/challenge/port/:id
+  - fetches data from the port with given id
+- **GET**: localhost:8000/challenge/port/code/:id
+  - fetches data from the port with given code
+- **POST**: localhost:8000/challenge/port
+  - update data from the port with given id
+- **DELETE**: localhost:8000/challenge/port/:id
+  - delete port with given id
+- **GET**: localhost:8000/challenge/parse-json
+  - parses data from json file into the database
 
 ## ports.json import flow
 
@@ -59,7 +64,9 @@ To import the port.json and keep it readilly available without requiring too muc
 ## Note
 
 - Most of the code in this project was inspired in previous experiences.
-- I may have taken about 150m in total, including documentation.
+- I may have taken about 150m in total at first, including documentation.
+- I worked for about 180 more minutes during the weekend.
+- I worked for about 150 more minutes during the Monday and the same amount Tuesday.
 
 ## Author
 
