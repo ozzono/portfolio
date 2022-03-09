@@ -38,7 +38,8 @@ cd challenges/api/ports
 git checkout unrestricted-timeframe
 make run
 ```
-> `make run` will download the needed images; deploy the database and the golang server and add needed database strucure into postgres container.
+
+> `make run` download's the needed images; deploy the database and the golang server and add needed database strucure into postgres container.
 
 > All new executions starts with clean database; to add data from json file visit [localhost:8000/challenge/parse-json](localhost:8000/challenge/parse-json).
 
