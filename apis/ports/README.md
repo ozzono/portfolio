@@ -33,17 +33,23 @@ For this challenge I made the following choises:
 #### [back to table of contents :arrow_heading_up:](#table-of-contents)
 As listed in the [description](./DESCRIPTION.md)
 
-- :heavy_check_mark: The first service (Client API) should parse the JSON file and have REST interface
-  - :heavy_check_mark: Given a file with ports data (ports.json), write 2 services
-  - :heavy_check_mark: The file is of unknown size, it can contain several millions of records
+- :green_circle: The first service (Client API) should parse the JSON file and have REST interface
+  - :yellow_circle: Given a file with ports data (ports.json), write 2 services
+    - The ClientAPI does read and parse the ports.json, but there is only one service finished
+  - :green_circle: The file is of unknown size, it can contain several millions of records
   The service has limited resources available (e.g. 200MB ram)
-  - :heavy_multiplication_x: While reading the file, it should call a second service (PortDomainService), that either creates a new record in a database, or updates the existing one
-  - :heavy_multiplication_x: The end result should be a database containing the ports, representing the latest version found in the JSON. Database can be Map in memory
-  - :heavy_check_mark: The first service (Client API) should provide an endpoint to retrieve the data from the second service (PortDomainService)
-- :heavy_check_mark: Each service should be built using Dockerfile
-- :heavy_multiplication_x: Provide all tests that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing
-- :heavy_multiplication_x: Use gRPC as a transport between services
-- :heavy_check_mark: The readme should explain how to run your program and test it
+  - :yellow_circle: While reading the file, it should call a second service (PortDomainService), that either creates a new record in a database, or updates the existing one
+    - The ClientAPI does read and parse the ports.json, but there is only one service finished
+  - :yellow_circle: The end result should be a database containing the ports, representing the latest version found in the JSON. Database can be Map in memory
+    - The ClientAPI does read and parse the ports.json file:
+      - Port name repetition are ignored and first registry is kept
+      - Once the json is parsed, the ClientAPI keeps the last version only
+  - :yellow_circle: The first service (Client API) should provide an endpoint to retrieve the data from the second service (PortDomainService)
+    - As only ClientAPI was built, not data is fetched from PortDomainService
+- :green_circle: Each service should be built using Dockerfile
+- :red_circle: Provide all tests that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing
+- :red_circle: Use gRPC as a transport between services
+- :green_circle: The readme should explain how to run your program and test it
 
 ## Running the project 
 #### [back to table of contents :arrow_heading_up:](#table-of-contents)
