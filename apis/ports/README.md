@@ -35,17 +35,17 @@ As listed in the [description](./DESCRIPTION.md)
 
 - :green_circle: The first service (Client API) should parse the JSON file and have REST interface
   - :yellow_circle: Given a file with ports data (ports.json), write 2 services
-    - The ClientAPI does read and parse the ports.json, but there is only one service finished
+    - :small_yellow_triangle: The ClientAPI does read and parse the ports.json, but there is only one service finished
   - :green_circle: The file is of unknown size, it can contain several millions of records
   The service has limited resources available (e.g. 200MB ram)
   - :yellow_circle: While reading the file, it should call a second service (PortDomainService), that either creates a new record in a database, or updates the existing one
-    - The ClientAPI does read and parse the ports.json, but there is only one service finished
+    - :small_yellow_triangle: The ClientAPI does read and parse the ports.json, but there is only one service finished
   - :yellow_circle: The end result should be a database containing the ports, representing the latest version found in the JSON. Database can be Map in memory
-    - The ClientAPI does read and parse the ports.json file:
-      - Port name repetition are ignored and first registry is kept
-      - Once the json is parsed, the ClientAPI keeps the last version only
+    - :small_yellow_triangle: The ClientAPI does read and parse the ports.json file:
+      - :small_yellow_triangle: Port name repetition are ignored and first registry is kept
+      - :small_yellow_triangle: Once the json is parsed, the ClientAPI keeps the last version only
   - :yellow_circle: The first service (Client API) should provide an endpoint to retrieve the data from the second service (PortDomainService)
-    - As only ClientAPI was built, not data is fetched from PortDomainService
+    - :small_yellow_triangle: As only ClientAPI was built, not data is fetched from PortDomainService
 - :green_circle: Each service should be built using Dockerfile
 - :red_circle: Provide all tests that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing
 - :red_circle: Use gRPC as a transport between services
