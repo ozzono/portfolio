@@ -31,7 +31,7 @@ For this challenge I made the following choises:
 
 ## Technical Test Item List 
 #### [back to table of contents :arrow_heading_up:](#table-of-contents)
-> As listed in the [description](./DESCRIPTION.md):
+> As listed in the [description](./DESCRIPTION.md#technical-test):
 
 - :green_circle: The first service (Client API) should parse the JSON file and have REST interface;
   - :yellow_circle: Given a file with ports data (ports.json), write 2 services;
