@@ -51,6 +51,11 @@ As listed in the [description](./DESCRIPTION.md)
 - :red_circle: Use gRPC as a transport between services
 - :green_circle: The readme should explain how to run your program and test it
 
+### Subtitles:
+> - :green_circle: Done;
+> - :red_circle: Not-done;
+> - :yellow_circle: Partially done or made differently;
+
 ## Running the project 
 #### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
