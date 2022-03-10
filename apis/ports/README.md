@@ -6,6 +6,7 @@ Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge 
 
 - [Choises](#choises)
 - [What I was not able to do in time](#what-i-was-not-able-to-do-in-time)
+- [Technical Test Item List](#what-i-was-not-able-to-do-in-time)
 - [Running the project](#running-the-project)
 - [Available Routes](#available-routes)
 - [ports.json import flow](#portsjson-import-flow)
@@ -24,9 +25,24 @@ For this challenge I made the following choises:
 ## What I was not able to do in time (withing 2h)
 
 - Develop the `PortDomainsService` and communicate between both services using gRPC;
-- Make the `ClientAPI` work properly;
 - Develop automated tests for both services;
-- Graceful shutdown;
+
+## Technical Test Item List
+As listed in the [description](./DESCRIPTION.md)
+
+- :heavy_check_mark: The first service (Client API) should parse the JSON file and have REST interface
+  - :heavy_check_mark: Given a file with ports data (ports.json), write 2 services
+  - :heavy_check_mark: The file is of unknown size, it can contain several millions of records
+  The service has limited resources available (e.g. 200MB ram)
+  - :heavy_multiplication_x: While reading the file, it should call a second service (PortDomainService), that either creates a new record in a database, or updates the existing one
+  - :heavy_multiplication_x: The end result should be a database containing the ports, representing the latest version found in the JSON. Database can be Map in memory
+  - :heavy_check_mark: The first service (Client API) should provide an endpoint to retrieve the data from the second service (PortDomainService)
+- :heavy_check_mark: Each service should be built using Dockerfile
+- :heavy_multiplication_x: Provide all tests that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing
+- :heavy_multiplication_x: Use gRPC as a transport between services
+- :heavy_check_mark: :heavy_multiplication_x: The readme should explain how to run your program and test it
+
+Choose the approach that you think is best (i.e. most flexible).
 
 ## Running the project
 
