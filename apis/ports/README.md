@@ -13,7 +13,8 @@ Luckilly, as described [here](./DESCRIPTION.md), the proposal of this challenge 
 - [Note](#note)
 - [Author](#author)
 
-## Choises
+## Choises 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 For this challenge I made the following choises:
 
@@ -22,12 +23,14 @@ For this challenge I made the following choises:
 - Automatic migrations with go's migration tool, making it possible to fill the database automatically on project build;
 - MVC structure
 
-## What I was not able to do in time (withing 2h)
+## What I was not able to do in time (withing 2h) 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 - Develop the `PortDomainsService` and communicate between both services using gRPC;
 - Develop automated tests for both services;
 
-## Technical Test Item List
+## Technical Test Item List 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 As listed in the [description](./DESCRIPTION.md)
 
 - :heavy_check_mark: The first service (Client API) should parse the JSON file and have REST interface
@@ -40,11 +43,10 @@ As listed in the [description](./DESCRIPTION.md)
 - :heavy_check_mark: Each service should be built using Dockerfile
 - :heavy_multiplication_x: Provide all tests that you think are needed for your assignment. This will allow the reviewer to evaluate your critical thinking as well as your knowledge about testing
 - :heavy_multiplication_x: Use gRPC as a transport between services
-- :heavy_check_mark: :heavy_multiplication_x: The readme should explain how to run your program and test it
+- :heavy_check_mark: The readme should explain how to run your program and test it
 
-Choose the approach that you think is best (i.e. most flexible).
-
-## Running the project
+## Running the project 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 This project has as only requirements the docker CLI. One could clone the repo or download and unzip it.
 
@@ -61,7 +63,8 @@ make run
 
 Run `make stop` to interrupt the services.
 
-## Available routes
+## Available routes 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 - **GET**: localhost:8000/challenge/ports/
   - fetches all ports in the database
@@ -76,18 +79,21 @@ Run `make stop` to interrupt the services.
 - **GET**: localhost:8000/challenge/parse-json
   - parses data from json file into the database
 
-## ports.json import flow
+## ports.json import flow 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 To import the port.json and keep it readilly available without requiring too much resources I decided to store the data in postgres database. Once the json is parsed and its data is stored, the json_controller table would have a column named as `parsed` to avoid parsing the same file multiple times.
 
-## Note
+## Note 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 - Most of the code in this project was inspired in previous experiences.
 - I may have taken about 150m in total at first, including documentation.
 - I worked for about 180 more minutes during the weekend.
 - I worked for about 150 more minutes during the Monday and the same amount Tuesday.
 
-## Author
+## Author 
+### [back to table of contents :arrow_heading_up:](#table-of-contents)
 
 👤 **Hugo Virgílio**
 
