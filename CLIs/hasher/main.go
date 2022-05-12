@@ -67,14 +67,34 @@ func main() {
 	}
 
 	wg := sync.WaitGroup{}
+
 	wg.Add(1)
 	go func() {
-		dl.GotPkgDL()
+		t, err := dl.GotPkgDL()
+		if err != nil {
+			log.Printf("dl.GotPkgDL - %v", err)
+		}
+		log.Printf("dl.GotPkgDL duration - %dms", t)
 		defer wg.Done()
 	}()
+
 	wg.Add(1)
 	go func() {
-		dl.GrabPkgDL()
+		t, err := dl.GrabPkgDL()
+		if err != nil {
+			log.Printf("dl.GrabPkgDL - %v", err)
+		}
+		log.Printf("dl.GrabPkgDL duration - %dms", t)
+		defer wg.Done()
+	}()
+
+	wg.Add(1)
+	go func() {
+		t, err := dl.StdLibDL()
+		if err != nil {
+			log.Printf("dl.StdLibDL - %v", err)
+		}
+		log.Printf("dl.StdLibDL duration - %dms", t)
 		defer wg.Done()
 	}()
 
