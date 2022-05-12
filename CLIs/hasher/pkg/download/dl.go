@@ -1,6 +1,7 @@
 package dl
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -22,15 +23,24 @@ type DL struct {
 	Debug    bool
 }
 
+type limit struct{}
+
 func (dl DL) GrabPkgDL() (int64, error) {
 	log.Println("GrabDL")
 	t1 := time.Now()
 
 	// create client
 	client := grab.NewClient()
+
 	req, err := grab.NewRequest(dl.Dest+"grabdl", dl.URL)
 	if err != nil {
 		return 0, errors.Wrap(err, "grab.NewRequest")
+	}
+	if dl.Throttle {
+		req.RateLimiter = limit{}
+		if err := req.RateLimiter.WaitN(req.Context(), 1000); err != nil {
+			log.Fatalf("req.RateLimiter.WaitN - %v", err)
+		}
 	}
 	defer utils.RMFile(dl.Dest + "grabdl")
 
@@ -63,21 +73,16 @@ Loop:
 		return 0, errors.Wrapf(err, "GrabDL Download failed: %v\n")
 	}
 
-	log.Printf("GrabDL Download saved to ./%v", resp.Filename)
 	return time.Since(t1).Milliseconds(), nil
 }
 
 func (dl DL) GotPkgDL() (int64, error) {
 	log.Println("GotPkgDL")
 	t1 := time.Now()
-	defer func() {
-		log.Printf("GotPkgDL duration %dms", time.Since(t1).Milliseconds())
-	}()
 
 	if err := got.New().Download(dl.URL, dl.Dest+"gotpkgdl"); err != nil {
 		return 0, errors.Wrap(err, "got.New().Download()")
 	}
-	log.Printf("GotPkgDL Download saved to ./%v", dl.Dest+"gotpkgdl")
 
 	return time.Since(t1).Milliseconds(), nil
 }
@@ -93,7 +98,9 @@ func (dl DL) StdLibDL() (int64, error) {
 	defer func() {
 		out.Close()
 		utils.RMFile(dl.Dest + "stdlibdl")
-		log.Printf("StdLibDL Download saved to %s", dl.Dest+"stdlibdl")
+		if dl.Debug {
+			log.Printf("StdLibDL Download saved to %s", dl.Dest+"stdlibdl")
+		}
 	}()
 
 	resp, err := http.Get(dl.URL)
@@ -105,7 +112,6 @@ func (dl DL) StdLibDL() (int64, error) {
 	if _, err = io.Copy(out, resp.Body); err != nil {
 		return 0, errors.Wrap(err, "io.Copy")
 	}
-	log.Printf("StdLibDL duration %vms", time.Since(t1).Milliseconds())
 
 	return time.Since(t1).Milliseconds(), nil
 }
@@ -120,4 +126,9 @@ func (t transfer) Log(debug bool) {
 		format := "- transferred %0" + charSize + "v / %v bytes - % .2f%%\n"
 		fmt.Printf(format, t.BytesComplete(), t.Size(), 100*t.Progress())
 	}
+}
+
+func (l limit) WaitN(ctx context.Context, n int) (err error) {
+	time.Sleep(time.Duration(n) * time.Microsecond)
+	return nil
 }

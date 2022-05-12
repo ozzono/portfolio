@@ -2,7 +2,7 @@
     "url"          : "https://apod.nasa.gov/apod/image/2205/CatsPaw_Bemmerl_960.jpg",
     "sleepTicker"  : 100,
     "sizeLimit"    : 32,
-    "throttle"     : false,
+    "throttle"     : true,
     "destPath"     : ".data",
     "debug"        : false
 }
