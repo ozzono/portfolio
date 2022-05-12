@@ -3,5 +3,6 @@
     "sleepTicker"  : 100,
     "sizeLimit"    : 32,
     "throttle"     : false,
-    "destPath"     : ".data"
+    "destPath"     : ".data",
+    "debug"        : false
 }

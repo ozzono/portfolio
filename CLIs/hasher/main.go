@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/cavaliergopher/grab/v3"
@@ -36,6 +37,7 @@ type config struct {
 	SizeLimit   int    `json:"sizeLimit"`
 	Throttle    bool   `json:"throttle"`
 	DestPath    string `json:"destPath"`
+	Debug       bool   `json:"debug"`
 }
 
 func init() {
@@ -57,11 +59,21 @@ func main() {
 	}
 
 	config.Log()
-	if err := config.DownloadFromURL(); err != nil {
-		log.Fatalf("config.DownloadFromURL - %v", err)
-	}
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		if err := config.DownloadFromURL(); err != nil {
+			log.Fatalf("config.DownloadFromURL - %v", err)
+		}
+		defer wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		config.f3()
+		defer wg.Done()
+	}()
 
-	config.SwiftDL()
+	wg.Wait()
 }
 
 func (c config) DownloadFromURL() error {
@@ -73,11 +85,11 @@ func (c config) DownloadFromURL() error {
 
 	// create client
 	client := c.NewClient()
-	req, err := grab.NewRequest(tmpData, c.Url)
+	req, err := grab.NewRequest(tmpData+"dl", c.Url)
 	if err != nil {
 		return errors.Wrap(err, "grab.NewRequest")
 	}
-	defer cleanTmp()
+	defer cleanTmp(tmpData + "dl")
 
 	// start download
 	fmt.Printf("Downloading %v...\n", req.URL())
@@ -92,7 +104,7 @@ Loop:
 	for {
 		select {
 		case <-t.C:
-			resp.Log()
+			resp.Log(c.Debug)
 		case <-resp.Done:
 			// download is complete
 			break Loop
@@ -101,6 +113,101 @@ Loop:
 
 	if err := resp.Err(); err != nil {
 		return errors.Wrapf(err, "Download failed: %v\n")
+	}
+
+	fmt.Printf("Download saved to ./%v \n", resp.Filename)
+	return nil
+}
+
+func (c config) f2() {
+	log.Println("f2")
+	t1 := time.Now()
+	defer func() {
+		log.Printf("f2 duration %dms", time.Since(t1).Milliseconds())
+	}()
+
+	// create client
+	client := grab.NewClient()
+	req, err := grab.NewRequest(tmpData+"f2", c.Url)
+	if err != nil {
+		// return errors.Wrap(err, "grab.NewRequest")
+		log.Println(err)
+	}
+	defer cleanTmp(tmpData + "f2")
+	// start download
+	fmt.Printf("Downloading %v...\n", req.URL())
+	resp := transfer{client.Do(req)}
+
+	fmt.Printf("  %v\n", resp.HTTPResponse.Status)
+
+	// start UI loop
+	t := time.NewTicker(100 * time.Millisecond)
+	defer t.Stop()
+
+Loop:
+	for {
+		select {
+		case <-t.C:
+			resp.Log(c.Debug)
+			// fmt.Printf("  transferred %v / %v bytes (%.2f%%)\n",
+			// 	resp.BytesComplete(),
+			// 	resp.Size(),
+			// 	100*resp.Progress())
+
+		case <-resp.Done:
+			// download is complete
+			break Loop
+		}
+	}
+
+	// check for errors
+	if err := resp.Err(); err != nil {
+		fmt.Fprintf(os.Stderr, "Download failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("Download saved to ./%v \n", resp.Filename)
+}
+
+func (c config) f3() error {
+	log.Println("f3")
+	t1 := time.Now()
+	defer func() {
+		log.Printf("f3 duration %dms", time.Since(t1).Milliseconds())
+	}()
+
+	// create client
+	client := grab.NewClient()
+	req, err := grab.NewRequest(tmpData+"f3", "https://apod.nasa.gov/apod/image/2205/CatsPaw_Bemmerl_960.jpg")
+	if err != nil {
+		return errors.Wrap(err, "grab.NewRequest")
+	}
+	defer cleanTmp(tmpData + "f3")
+
+	// start download
+	fmt.Printf("Downloading %v...\n", req.URL())
+	resp := transfer{client.Do(req)}
+	fmt.Printf("  %v\n", resp.HTTPResponse.Status)
+
+	// start UI loop
+	t := time.NewTicker(100 * time.Millisecond)
+	defer t.Stop()
+
+Loop:
+	for {
+		select {
+		case <-t.C:
+			resp.Log(c.Debug)
+
+		case <-resp.Done:
+			// download is complete
+			break Loop
+		}
+	}
+
+	// check for errors
+	if err := resp.Err(); err != nil {
+		return errors.Wrap(resp.Err(), "client.Do()")
 	}
 
 	fmt.Printf("Download saved to ./%v \n", resp.Filename)
@@ -184,8 +291,8 @@ func (c config) Log() {
 	log.Printf("config.Throttle ----- %v", c.Throttle)
 }
 
-func cleanTmp() {
-	if err := os.Remove(tmpData); err != nil {
+func cleanTmp(path string) {
+	if err := os.Remove(path); err != nil {
 		log.Printf("os.Remove - %v", err)
 	}
 }
@@ -194,8 +301,10 @@ type transfer struct {
 	*grab.Response
 }
 
-func (t transfer) Log() {
-	charSize := fmt.Sprint(len(fmt.Sprint(t.Size())))
-	format := "- transferred %0" + charSize + "v / %v bytes - % .2f%%\n"
-	fmt.Printf(format, t.BytesComplete(), t.Size(), 100*t.Progress())
+func (t transfer) Log(debug bool) {
+	if debug {
+		charSize := fmt.Sprint(len(fmt.Sprint(t.Size())))
+		format := "- transferred %0" + charSize + "v / %v bytes - % .2f%%\n"
+		fmt.Printf(format, t.BytesComplete(), t.Size(), 100*t.Progress())
+	}
 }
