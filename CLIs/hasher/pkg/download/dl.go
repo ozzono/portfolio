@@ -16,41 +16,53 @@ import (
 	"github.com/pkg/errors"
 )
 
-type DL struct {
-	Dest     string
-	URL      string
-	Throttle bool
-	Debug    bool
+const (
+	tmpData = ".data"
+)
+
+type Config struct {
+	Dest     string `json:"dest"`
+	URL      string `json:"url"`
+	Throttle bool   `json:"throttle"`
+	Debug    bool   `json:"debug"`
+	tmpFile  string
 }
 
-type limit struct{}
+func (c *Config) TmpFile(path string) {
+	c.tmpFile = path
+}
 
-func (dl DL) GrabPkgDL() (int64, error) {
+type limit struct {
+	ref string
+}
+
+func (c *Config) GrabPkgDL() (int64, error) {
 	log.Println("GrabDL")
 	t1 := time.Now()
 
-	// create client
+	suffix := "grab"
+	if c.tmpFile != "" {
+		suffix = c.tmpFile
+	}
+
 	client := grab.NewClient()
 
-	req, err := grab.NewRequest(dl.Dest+"grabdl", dl.URL)
+	req, err := grab.NewRequest(tmpData+suffix, c.URL)
 	if err != nil {
 		return 0, errors.Wrap(err, "grab.NewRequest")
 	}
-	if dl.Throttle {
-		req.RateLimiter = limit{}
-		if err := req.RateLimiter.WaitN(req.Context(), 1000); err != nil {
-			log.Fatalf("req.RateLimiter.WaitN - %v", err)
-		}
+	if c.Throttle {
+		req.RateLimiter = limit{ref: suffix}
+		req.RateLimiter.WaitN(req.Context(), 100)
 	}
-	defer utils.RMFile(dl.Dest + "grabdl")
+	defer utils.RMFile(tmpData + suffix)
 
-	// start download
-	if dl.Debug {
-		log.Printf("GrabDL Downloading %v", req.URL())
+	if c.Debug {
+		log.Printf("%s GrabDL Downloading %v", suffix, req.URL())
 	}
 
-	resp := transfer{client.Do(req)}
-	if dl.Debug {
+	resp := transfer{client.Do(req), " " + suffix}
+	if c.Debug {
 		log.Printf("- %v", resp.HTTPResponse.Status)
 	}
 
@@ -62,7 +74,7 @@ Loop:
 	for {
 		select {
 		case <-t.C:
-			resp.Log(dl.Debug)
+			resp.Log(c.Debug)
 		case <-resp.Done:
 			// download is complete
 			break Loop
@@ -70,40 +82,40 @@ Loop:
 	}
 
 	if err := resp.Err(); err != nil {
-		return 0, errors.Wrapf(err, "GrabDL Download failed: %v\n")
+		return 0, errors.Wrap(err, "GrabDL Download failed")
 	}
 
 	return time.Since(t1).Milliseconds(), nil
 }
 
-func (dl DL) GotPkgDL() (int64, error) {
+func (c *Config) GotPkgDL() (int64, error) {
 	log.Println("GotPkgDL")
 	t1 := time.Now()
 
-	if err := got.New().Download(dl.URL, dl.Dest+"gotpkgdl"); err != nil {
+	if err := got.New().Download(c.URL, tmpData+"gotpkgdl"); err != nil {
 		return 0, errors.Wrap(err, "got.New().Download()")
 	}
 
 	return time.Since(t1).Milliseconds(), nil
 }
 
-func (dl DL) StdLibDL() (int64, error) {
+func (c *Config) StdLibDL() (int64, error) {
 	log.Println("StdLibDL")
 
 	t1 := time.Now()
-	out, err := os.Create(dl.Dest + "stdlibdl")
+	out, err := os.Create(tmpData + "stdlibdl")
 	if err != nil {
 		return 0, errors.Wrap(err, "os.Create")
 	}
 	defer func() {
 		out.Close()
-		utils.RMFile(dl.Dest + "stdlibdl")
-		if dl.Debug {
-			log.Printf("StdLibDL Download saved to %s", dl.Dest+"stdlibdl")
+		utils.RMFile(tmpData + "stdlibdl")
+		if c.Debug {
+			log.Printf("StdLibDL Download saved to %s", tmpData+"stdlibdl")
 		}
 	}()
 
-	resp, err := http.Get(dl.URL)
+	resp, err := http.Get(c.URL)
 	if err != nil {
 		return 0, errors.Wrap(err, "http.Get")
 	}
@@ -118,17 +130,27 @@ func (dl DL) StdLibDL() (int64, error) {
 
 type transfer struct {
 	*grab.Response
+	ref string
 }
 
 func (t transfer) Log(debug bool) {
 	if debug {
 		charSize := fmt.Sprint(len(fmt.Sprint(t.Size())))
-		format := "- transferred %0" + charSize + "v / %v bytes - % .2f%%\n"
-		fmt.Printf(format, t.BytesComplete(), t.Size(), 100*t.Progress())
+		format := "-%s transferred %0" + charSize + "v / %v bytes - % .2f%%\n"
+		fmt.Printf(format, t.ref, t.BytesComplete(), t.Size(), 100*t.Progress())
 	}
 }
 
+// Sets waiting period in microseconds
 func (l limit) WaitN(ctx context.Context, n int) (err error) {
+	// log.Printf("%s sleeping for %dµs", l.ref, n) // kept only for debugging purposes
 	time.Sleep(time.Duration(n) * time.Microsecond)
-	return nil
+	return
+}
+
+func (c *Config) Log() {
+	log.Printf("c.URL ------- %v", c.URL)
+	log.Printf("c.Throttle -- %v", c.Throttle)
+	log.Printf("c.Debug ----- %v", c.Debug)
+	log.Printf("c.Dest ------ %v", c.Dest)
 }
