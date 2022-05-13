@@ -2,7 +2,6 @@ package cmd
 
 import (
 	dl "hasher/pkg/download"
-	"log"
 	"sync"
 	"testing"
 
@@ -12,7 +11,8 @@ import (
 func TestBenchMark(t *testing.T) {
 	throttled, err := getConfig()
 	if err != nil {
-		log.Fatalf("getConfig - %v", err)
+		t.Errorf("getConfig - %v", err)
+		t.FailNow()
 	}
 
 	var (
