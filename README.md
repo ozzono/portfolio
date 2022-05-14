@@ -1,8 +1,6 @@
 # Code Challenges Repo
 
-## In here it's possible to find some of the code-challenges I took a part through out the time
-
-### Before sharing here, each challenge description had it's requester information removed
+## In here it's possible to find some of the code I developed through out the time
 
 Available challenges:
 
@@ -11,6 +9,8 @@ Available challenges:
   - [todolist](./apis/todolist)
   - [port mngmt](./apis/ports)
   - [swapi](./apis/swapi)
+- CLIs
+  - [hasher](/CLIs/hasher/)
 - [Load Balance](./load-balance-01)
 - [Logic Practice](./logic-practice-01)
 - [Microservices](./microservices)

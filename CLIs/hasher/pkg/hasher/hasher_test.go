@@ -20,8 +20,8 @@ func TestHash1(t *testing.T) {
 	assert.EqualValues(t, expected.Hash, hashed.Hash, "returned hashed value different from expected")
 	assert.EqualValues(t, expected.Hex, hashed.Hex, "returned hashed value different from expected")
 
-	t.Log(hashed)
-	t.Logf("encoded to hexa: %v", expected.Hex)
+	t.Logf("hashed.Hash -- %v", expected.Hash)
+	t.Logf("hashed.Hex --- %v", expected.Hex)
 }
 
 func TestHash2(t *testing.T) {
@@ -32,12 +32,12 @@ func TestHash2(t *testing.T) {
 	}
 
 	expected := &Hashed{
-		Hash: []byte{0, 141, 192, 24, 34, 25, 192, 167},
-		Hex:  "008dc0182219c0a7"}
+		Hash: []byte{0, 251, 85, 247, 166, 162, 45, 30},
+		Hex:  "00fb55f7a6a22d1e"}
 
 	assert.EqualValues(t, expected.Hash, hashed.Hash, "returned hashed value different from expected")
 	assert.EqualValues(t, expected.Hex, hashed.Hex, "returned hashed value different from expected")
 
-	t.Log(hashed)
-	t.Logf("encoded to hexa: %v", hashed.Hex)
+	t.Logf("hashed.Hash -- %v", hashed.Hash)
+	t.Logf("hashed.Hex --- %v", hashed.Hex)
 }

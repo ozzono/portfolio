@@ -29,7 +29,7 @@ func TestThrottleBench(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		if _, err := unthrottled.GrabPkgDL(); err != nil {
-			t.Logf("unthrottled.GrabPkgDL - %v", err)
+			t.Logf("unthrottled.GrabPkgDL -- %v", err)
 		}
 		defer wg.Done()
 	}()
@@ -37,7 +37,7 @@ func TestThrottleBench(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		if _, err := throttled.GrabPkgDL(); err != nil {
-			t.Logf("  throttled.GrabPkgDL - %v", err)
+			t.Logf("throttled.GrabPkgDL ---- %v", err)
 		}
 		defer wg.Done()
 	}()
@@ -48,7 +48,7 @@ func TestThrottleBench(t *testing.T) {
 	t.Logf("throttled.GrabPkgDL duration ---- %dms", throttled.ElapsedTime)
 	t.Logf("throttled request took %.2f%% more time", (float64(throttled.ElapsedTime)/float64(unthrottled.ElapsedTime))*100-100)
 	if throttled.ElapsedTime < unthrottled.ElapsedTime {
-		t.Logf("unthrottled request took longer than throttled request")
+		t.Errorf("unthrottled request took longer than throttled request")
 		t.Fail()
 	}
 }

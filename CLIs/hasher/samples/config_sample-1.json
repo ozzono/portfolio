@@ -1,0 +1,6 @@
+{
+    "url"          : "https://apod.nasa.gov/apod/image/2205/CatsPaw_Bemmerl_960.jpg",
+    "throttle"     :true,
+    "dest"     : ".data",
+    "debug"        : true
+}
