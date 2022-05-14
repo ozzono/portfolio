@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"sync"
 
 	dl "hasher/pkg/download"
+	"hasher/pkg/hasher"
+	"hasher/pkg/utils"
 
 	"github.com/pkg/errors"
 )
@@ -30,40 +31,33 @@ func init() {
 	flag.BoolVar(&debug, "debug", false, "enables download debugging")
 }
 
-func Run() {
+func Run() error {
 	if err := validateArgs(); err != nil {
-		log.Fatalf("validateArgs - %v", err)
+		return errors.Wrap(err, "validateArgs")
 	}
 	config, err := getConfig()
 	if err != nil {
-		log.Fatalf("getConfig - %v", err)
+		return errors.Wrap(err, "getConfig")
 	}
 
-	config.Log()
+	rawData, err := config.GrabPkgDL()
+	if err != nil {
+		return errors.Wrap(err, "config.GrabPkgDL")
+	}
 
-	wg := sync.WaitGroup{}
+	hashed, err := hasher.Hasher(rawData)
+	if err != nil {
+		return errors.Wrap(err, "hasher.Hasher")
+	}
 
-	wg.Add(1)
-	go func() {
-		t, err := config.GrabPkgDL()
-		if err != nil {
-			log.Printf("config.GrabPkgDL - %v", err)
-		}
-		log.Printf("config.GrabPkgDL duration - %dms", t)
-		defer wg.Done()
-	}()
+	if err := utils.WriteToFile(hashed.Hex, config.Dest); err != nil {
+		return errors.Wrap(err, "utils.WriteToFile")
+	}
 
-	wg.Add(1)
-	go func() {
-		t, err := config.GrabPkgDL()
-		if err != nil {
-			log.Printf("config.GrabPkgDL - %v", err)
-		}
-		log.Printf("config.GrabPkgDL duration - %dms", t)
-		defer wg.Done()
-	}()
-
-	wg.Wait()
+	if config.Debug {
+		log.Printf("hashed hex: %s", hashed.Hex)
+	}
+	return nil
 }
 
 func validateArgs() error {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
+	"encoding/hex"
 
 	"github.com/pkg/errors"
 )
@@ -12,7 +13,12 @@ var (
 	coefficients = [8]int{2, 3, 5, 7, 11, 13, 17, 19}
 )
 
-func Hasher(input string) ([]byte, error) {
+type Hashed struct {
+	Hash []byte
+	Hex  string
+}
+
+func Hasher(input string) (*Hashed, error) {
 	hashedInput := []byte{}
 	for _, b := range sha256.Sum256([]byte(input)) {
 		hashedInput = append(hashedInput, b)
@@ -22,7 +28,12 @@ func Hasher(input string) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "reduceBytes")
 	}
-	return customHasher(reduced), nil
+
+	custom := customHasher(reduced)
+	return &Hashed{
+		Hash: custom,
+		Hex:  hex.EncodeToString(custom),
+	}, nil
 }
 
 // I did not get what was meant to be done here

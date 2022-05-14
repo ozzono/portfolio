@@ -21,11 +21,12 @@ const (
 )
 
 type Config struct {
-	Dest     string `json:"dest"`
-	URL      string `json:"url"`
-	Throttle bool   `json:"throttle"`
-	Debug    bool   `json:"debug"`
-	tmpFile  string
+	Dest        string `json:"dest"`
+	URL         string `json:"url"`
+	Throttle    bool   `json:"throttle"`
+	Debug       bool   `json:"debug"`
+	tmpFile     string
+	ElapsedTime int64 //in millisecond
 }
 
 func (c *Config) TmpFile(path string) {
@@ -36,9 +37,12 @@ type limit struct {
 	ref string
 }
 
-func (c *Config) GrabPkgDL() (int64, error) {
+func (c *Config) GrabPkgDL() (string, error) {
 	log.Println("GrabDL")
 	t1 := time.Now()
+	defer func() {
+		c.ElapsedTime = time.Since(t1).Milliseconds()
+	}()
 
 	suffix := "grab"
 	if c.tmpFile != "" {
@@ -49,13 +53,12 @@ func (c *Config) GrabPkgDL() (int64, error) {
 
 	req, err := grab.NewRequest(tmpData+suffix, c.URL)
 	if err != nil {
-		return 0, errors.Wrap(err, "grab.NewRequest")
+		return "", errors.Wrap(err, "grab.NewRequest")
 	}
 	if c.Throttle {
 		req.RateLimiter = limit{ref: suffix}
 		req.RateLimiter.WaitN(req.Context(), 100)
 	}
-	defer utils.RMFile(tmpData + suffix)
 
 	if c.Debug {
 		log.Printf("%s GrabDL Downloading %v", suffix, req.URL())
@@ -82,12 +85,20 @@ Loop:
 	}
 
 	if err := resp.Err(); err != nil {
-		return 0, errors.Wrap(err, "GrabDL Download failed")
+		return "", errors.Wrap(err, "GrabDL Download failed")
 	}
 
-	return time.Since(t1).Milliseconds(), nil
+	rawData, err := utils.ReadNEraseFile(tmpData + suffix)
+	if err != nil {
+		return "", errors.Wrap(err, "utils.ReadNEraseFile")
+	}
+
+	return rawData, nil
 }
 
+// This is a research leftover kept only because why not?
+//
+// note: this method was ditched as I didn't find throttling support
 func (c *Config) GotPkgDL() (int64, error) {
 	log.Println("GotPkgDL")
 	t1 := time.Now()
@@ -99,6 +110,9 @@ func (c *Config) GotPkgDL() (int64, error) {
 	return time.Since(t1).Milliseconds(), nil
 }
 
+// This is a research leftover kept only because why not?
+//
+// note: this method was ditched as I didn't find throttling support
 func (c *Config) StdLibDL() (int64, error) {
 	log.Println("StdLibDL")
 
