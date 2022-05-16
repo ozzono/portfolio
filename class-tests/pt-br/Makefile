@@ -1,2 +1,2 @@
-main:
-	./samples/main/class-test-main
+hello-gopher:
+	./samples/hello-gopher/hello-gopher

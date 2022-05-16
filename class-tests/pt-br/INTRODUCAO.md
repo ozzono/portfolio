@@ -13,7 +13,7 @@ Numa breve descrição, Golang é uma linguagem inicialmente desenvolvida pelo G
 ## Olá gopher
 
 Seguindo a tradição da maioria dos tutoriais, o primeiro código escrito compreende a escrita de um cumprimento. Abaixo vemos como é escrito usango Go.
-> [Código de exemplo](/samples/main/main.go)
+> [Código de exemplo](/samples/hello-gopher/main.go)
 
 ```go
 package main
@@ -35,10 +35,10 @@ func main() {
 }
 ```
 
-Retorno do comando `./samples/main/main` ou `make main`
+Retorno do comando `./samples/hello-gopher/hello-gopher` ou `make hello-gopher`
 
 ```log
-$ make main                     
-./samples/main/class-test-main
+$ make hello-gopher
+./samples/hello-gopher/hello-gopher
 Olá Gopher
 ```
