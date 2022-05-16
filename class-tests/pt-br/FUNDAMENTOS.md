@@ -23,8 +23,6 @@
 - [Operadores Unários](#operadores-unários)
 - [Ponteiros](#ponteiros)
 
-##### [Sumário](#sumário)
-
 ## Constantes e Variáveis
 
 Golang, como a maioria das linguages, suporta variáveis e constantes. O que fazem é alto-explicativo: variáveis armazenam valores que podem ser modificados ao longo da execução do código enquanto constantes não.  
