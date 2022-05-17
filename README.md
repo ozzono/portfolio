@@ -11,6 +11,7 @@ Available challenges:
   - [swapi](./apis/swapi)
 - CLIs
   - [hasher](/CLIs/hasher/)
+  - [custom-copy](/CLIs/custom-copy/)
 - Class Tests
   - [class test (pt-br)](/class-tests/class-test-pt-br.md)
 - [Load Balance](./load-balance-01)
