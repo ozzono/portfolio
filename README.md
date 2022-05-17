@@ -9,6 +9,7 @@ Available challenges:
   - [todolist](./apis/todolist)
   - [port mngmt](./apis/ports)
   - [swapi](./apis/swapi)
+  - [rest-get-api](./apis/rest-get-api/)
 - CLIs
   - [hasher](/CLIs/hasher/)
   - [custom-copy](/CLIs/custom-copy/)
