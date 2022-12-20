@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "8e6a111a-4266-4256-8434-f976d2b3c317",
+		"name": "url-shortener",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21779075"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "create short url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"data=JSON.parse(responseBody)",
+									"pm.collectionVariables.set(\"urlID\", data.id);",
+									"pm.collectionVariables.set(\"shortened\", data.shortened);",
+									"console.log(data.id)",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"source\":\"https://go.dev\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get url data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"data=JSON.parse(responseBody)",
+									"pm.collectionVariables.set(\"urlID\", data.id);",
+									"pm.collectionVariables.set(\"shortened\", data.shortened);",
+									"console.log(data.id)",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/{{urlID}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"{{urlID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "del url data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/{{urlID}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"{{urlID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/ping",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "redirect short url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/{{shortened}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"{{shortened}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "urlID",
+			"value": "123"
+		},
+		{
+			"key": "shortened",
+			"value": "123"
+		},
+		{
+			"key": "urlID",
+			"value": ""
+		}
+	]
+}

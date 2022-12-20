@@ -10,6 +10,7 @@ Available challenges:
   - [port mngmt](./apis/ports)
   - [swapi](./apis/swapi)
   - [rest-get-api](./apis/rest-get-api/)
+  - [url-shortener](./apis/url-shortener/)
 - CLIs
   - [hasher](/CLIs/hasher/)
   - [custom-copy](/CLIs/custom-copy/)
