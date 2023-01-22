@@ -1,9 +1,5 @@
 # ToDo List API Code Challenge
 
-## **All references to the requester company were omitted.**
-
-### Original `README.md` file renamed to [DESCRIPTION.md](./DESCRIPTION.md)
-
 ### Disclaimer
 
 Part of the code used in this challenge were inspired by the references linked below:
@@ -77,25 +73,25 @@ Part of the code used in this challenge were inspired by the references linked b
 
 The only issue I'm aware of is related to code repetition.  
 The mongodb connections should be centralized to avoid it.  
-As is, there are similar _CRUD_ methods for `users` and for `requests`.
+As is, there are similar *CRUD* methods for `users` and for `requests`.
 
 ### Test output sample
 
 command: `go test -v ./...`
 
 ```log
-?   	todo	[no test files]
+?    todo [no test files]
 === RUN   TestNewToken
 --- PASS: TestNewToken (0.00s)
 === RUN   TestValidateToken
 --- PASS: TestValidateToken (0.00s)
 PASS
-ok  	todo/auth	
+ok   todo/auth 
 === RUN   TestDatabase
 --- PASS: TestDatabase (0.01s)
 PASS
-ok  	todo/database	
-?   	todo/ip	[no test files]
+ok   todo/database 
+?    todo/ip [no test files]
 === RUN   TestAddDelReq
 --- PASS: TestAddDelReq (0.34s)
 === RUN   TestUpdateReq
@@ -109,7 +105,7 @@ ok  	todo/database
 === RUN   TestUserHashPassword
 --- PASS: TestUserHashPassword (0.89s)
 PASS
-ok  	todo/models	
+ok   todo/models 
 === RUN   TestPing
 --- PASS: TestPing (0.00s)
 === RUN   TestLogin
@@ -129,8 +125,8 @@ ok  	todo/models
 === RUN   TestUpdateRequest
 --- PASS: TestUpdateRequest (0.03s)
 PASS
-ok  	todo/requests	
-?   	todo/route	[no test files]
+ok   todo/requests 
+?    todo/route [no test files]
 === RUN   TestStress
     stress_test.go:34: Ping test
     stress_test.go:43: gimme the token
@@ -178,7 +174,7 @@ ok  	todo/requests
     stress_test.go:172: Easy, right?
 --- PASS: TestStress (34.68s)
 PASS
-ok  	todo/stress	36.252s
+ok   todo/stress 36.252s
 === RUN   TestFindHosts
 from [127 0 0 0] to [127 255 255 255]
 from [192 168 1 0] to [192 168 1 255]
@@ -186,5 +182,5 @@ from [172 17 0 0] to [172 17 255 255]
 from [172 18 0 0] to [172 18 255 255]
 --- PASS: TestFindHosts (0.00s)
 PASS
-ok  	todo/utils	
+ok   todo/utils 
 ```
