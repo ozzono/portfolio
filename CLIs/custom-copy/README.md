@@ -1,8 +1,8 @@
-# CLI Code Challenge
+# CLI Code
 
 ## CLI
 
-The binay was named as `custom-copy`.
+The binary was named `custom-copy`.
 
 ## Arguments
 

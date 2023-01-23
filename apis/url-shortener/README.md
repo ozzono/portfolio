@@ -1,4 +1,4 @@
-# URL shortened code challenge
+# URL shortened code
 
 ## Table of contents
 

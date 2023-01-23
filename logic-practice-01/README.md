@@ -1,8 +1,8 @@
-# Logic Challenge
+# Logic practice
 
 Code challenge [description here](./DESCRIPTION.md).
 
-To run the code execute `go test -v`.
+To run the code, execute `go` test -v`.
 
 ## Test output sample
 

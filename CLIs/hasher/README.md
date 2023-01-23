@@ -1,4 +1,4 @@
-# Hasher - *Code Technical Challenge*
+# Hasher - *Code Technical Practice*
 
 ## Table of contents
 
@@ -8,7 +8,7 @@
 
 ## Hash function
 
-As I did not understand what exactly was meant to be done as hash function, I implemented as near as possible of what I got figure out of the [description](./DESCRIPTION.md#L18).
+As I did not understand what was meant to be done as hash function, I implemented what I got out of the [description](./DESCRIPTION.md#L18) as nearly as possible.
 > Note: by default `make` commands runs only on unix systems.
 
 ## Run the code

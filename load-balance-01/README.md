@@ -1,14 +1,14 @@
-# Load Balance Code Challenge
+# Load Balance
 
 Challenge [description here](./customer_success_balancing/README.md)
 
-* This challenge was totally adapted to Go from the original one in Ruby;
+* The code was adapted to Go from the original one in Ruby;
 * I used the same data set to apply the tests;
 
 ## How to run the tests
 
-* There are two ways of testing the challenge code;
-* I easened the testing with simple `make` commands:
+* There are two ways of testing the code;
+* I eased the testing with simple `make` commands:
   * testing with go: `make go-test`
   * testing with docker: `make docker-test`
 
@@ -18,7 +18,9 @@ Challenge [description here](./customer_success_balancing/README.md)
 > * Neither of the test commands verifies if the needed programs are properly installed;
 
 ## Test output sample
+
 Command: `go test -v ./...`
+
 ```log
 === RUN   TestDefault
 --- PASS: TestDefault (0.00s)
@@ -37,5 +39,5 @@ Command: `go test -v ./...`
 === RUN   TestCase7
 --- PASS: TestCase7 (0.00s)
 PASS
-ok  	loadbalance	0.003s
+ok   loadbalance 0.003s
 ```

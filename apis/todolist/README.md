@@ -1,8 +1,8 @@
-# ToDo List API Code Challenge
+# ToDo List API Code Practice
 
 ### Disclaimer
 
-Part of the code used in this challenge was inspired by the references linked below:
+Part of the code used in this practice was inspired by the references linked below:
 
 - [Hamza Boughraira](https://medium.com/@hamza.boughraira)'s [Hands-On With JWT in Golang](https://betterprogramming.pub/hands-on-with-jwt-in-golang-8c986d1bb4c0) tutorial;
 - Golang & MongoDB usage documentation - [Quick Start: Golang & MongoDB](https://www.mongodb.com/golang):
