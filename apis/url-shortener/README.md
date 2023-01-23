@@ -14,26 +14,26 @@ The code follows the description as seen in the [DESCRIPTION](DESCRIPTION.md) fi
 
 ## Setting the environment
 
-This challenge uses mongodb in a docker container, so [docker](https://docs.docker.com/engine/install/) is a requirement.  
-The golang api itself is available using docker or runnning the code directly.  
+This challenge uses MongoDB in a docker container, so [docker](https://docs.docker.com/engine/install/) is a requirement.  
+The golang API itself is available using docker or running the code directly.  
 Commands:
 
 - `go run cmd/main.go`:
-  - to run the code directly execute the command above;
+  - to run the code directly, execute the command above;
 - `make rebuild` compiles the code into a new binary file;
 - `make with-docker` runs the code in docker, even with new rebuilt binary file;
-- `make without-docker` runs the code outside docker and send logs to url-shortener.log;
+- `make without-docker` runs the code outside docker and sends logs to url-shortener.log;
 
 ## Documentation
 
-I failed to make swagger work as intended, so I also wrote a PostMan Collection with the routes and added the import file in this repository.
+I failed to make swagger work as intended, so I wrote a PostMan Collection with the routes and added the import file to this repository.
 
 ## Routes
 
-- ping: only pings the api and returns `pong` if it's running;
-- api routes:
+- ping: only pings the API and returns `pong` if it's running;
+- API routes:
   - PUT: `localhost:8000/api`
-    - awaits source url as json data as exampled below:
+    - awaits source URL as JSON data as exampled below:
 
       ```json
       {
@@ -41,7 +41,7 @@ I failed to make swagger work as intended, so I also wrote a PostMan Collection 
       }
       ```
 
-    - returns a url data as exampled below:
+    - returns a URL data as exampled below:
 
         ```json
         {
@@ -53,8 +53,8 @@ I failed to make swagger work as intended, so I also wrote a PostMan Collection 
         ```
 
   - Get: `localhost:8000/api/:id`
-    - awaits url id in path;
-    - returns a url data as exampled below:
+    - awaits URL id in the path;
+    - returns a URL data as exampled below:
 
         ```json
         {
@@ -66,11 +66,11 @@ I failed to make swagger work as intended, so I also wrote a PostMan Collection 
         ```
 
   - Del: `localhost:8000/api/:id`
-    - awaits url id in path;
+    - awaits URL id in the path;
     - returns only request status code
 - Redirect: `localhost:8000/<shortpath>`
-  - redirects to stored shortened url; in this example:
-    - shortpath: hkujzph
+  - redirects to stored shortened URL; in this example:
+    - short path: hkujzph
       - `localhost:8000/hkujzph`
     - redirects to <https://go.dev>
 
@@ -78,10 +78,10 @@ I failed to make swagger work as intended, so I also wrote a PostMan Collection 
 
 > All tests and commands were executed in a linux machine.
 
-To test it's possible to run two commands:
+ To test its possible to run two commands:
 
 - `go test -v ./...`
-  - if go runtime is available the above command will run all tests in verbose mode;
+  - if go runtime is available, the above command will run all tests in verbose mode;
 - `make rebuild-test` rebuild all test binary files and `make tests` run the tests binary files in verbose mode;
 - test output sample:
 

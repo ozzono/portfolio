@@ -1,12 +1,10 @@
 # apis/request Code Challenge
 
-## **All references to the requester company were omitted.**
-
-### Original `README.md` file renamed to [DESCRIPTION.md](./DESCRIPTION.md)
+### [Project Description](./DESCRIPTION.md)
 
 ### Disclaimer
 
-Part of the code used in this challenge were inspired by the references linked below:
+Part of the code used in this challenge was inspired by the references linked below:
 
 - [Hamza Boughraira](https://medium.com/@hamza.boughraira)'s [Hands-On With JWT in Golang](https://betterprogramming.pub/hands-on-with-jwt-in-golang-8c986d1bb4c0) tutorial;
 - Golang & MongoDB usage documentation - [Quick Start: Golang & MongoDB](https://www.mongodb.com/golang):
@@ -16,32 +14,32 @@ Part of the code used in this challenge were inspired by the references linked b
   - [How to Update Documents](https://www.mongodb.com/blog/post/quick-start-golang--mongodb--how-to-update-documents);
   - [How to Delete Documents](https://www.mongodb.com/blog/post/quick-start-golang--mongodb--how-to-delete-documents);
 - Dealing with bson and primitives:
-  - [Getting mongodb _id for go](https://dev.to/yasaricli/getting-mongodb-id-for-go-4e05);
+  - [Getting MongoDB _id for go](https://dev.to/yasaricli/getting-mongodb-id-for-go-4e05);
   - [String to primitive.ObjectID](https://stackoverflow.com/questions/63879932/string-to-primitive-objectid);
   - [“golang struct to bson.d” Code Answer](https://www.codegrepper.com/code-examples/go/golang+struct+to+bson.d);
 - [Docker Hub's MongoDB image usage instructions](https://hub.docker.com/_/mongo);
 - [Golang: tests and working directory](https://stackoverflow.com/questions/23847003/golang-tests-and-working-directory);
 - Finding MongoDB host:
-  - I begun to write a tool similar to [nmap](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjDpYr30pbvAhUPlFkKHdPLCygQFjAAegQIARAE&url=https%3A%2F%2Fnmap.org%2F&usg=AOvVaw3VbFWhboEWZ5njba0KMQQX) before figuring out how to use docker-compose image name for internal network communication. Below you can find the documentation that saved me and the reference used to start the address search at runtime:
+  - I began to write a tool similar to [nmap](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjDpYr30pbvAhUPlFkKHdPLCygQFjAAegQIARAE&url=https%3A%2F%2Fnmap.org%2F&usg=AOvVaw3VbFWhboEWZ5njba0KMQQX) before figuring out how to use docker-compose image name for internal network communication. Below you can find the documentation that saved me and the reference used to start the address search at runtime:
   - [Networking in Compose](https://docs.docker.com/compose/networking/);
   - [Finding local addresses and masks](https://stackoverflow.com/a/53325915);
     - I kept the started tool for curiosity;
 
-> All commands should be executed on repository root folder  
-> Each time the project starts or the automated test are executed, the `request` database is dropped and recreated with minimal documents.
-> All generated tokens expires after 24h.
+> All commands should be executed on the repository root folder  
+> Each time the project starts or the automated test is completed, the `request` database is dropped and recreated with minimal documents.
+> All generated tokens expire after 24h.
 
 ### How to use
 
 - run `docker-compose up -d` or `make default` to start the project and release the terminal;
 - run `docker-compose down` or `make stop` to stop the project;
-- *to test* run `make test` or `go test ./... -v` if the services are alredy running;
+- *To test* run `make test` or `go test ./... -v` if the services are already running;
 
 > All authenticated endpoints accept the token sent as follows:
 >
-> - json payload `{"token":"data"}`
+> - JSON payload `{"token":"data"}`
 > - header `{"authorization":"data"}` or `{"authorization":"Bearer data"}`
->   - The actual format for the header configuration depends of the request origin. With Golang would be similar to this:  
+>   - The actual format for the header configuration depends on the request origin. With Golang would be similar to this:  
 >   ```req.Header.Add("authorization", "token.string.here")```
 
 ### Available Tests
@@ -76,12 +74,12 @@ Part of the code used in this challenge were inspired by the references linked b
 ### Known issues
 
 The only issue I'm aware of is related to code repetition.  
-The mongodb connections should be centralized to avoid it.  
-As is, there are similar _CRUD_ methods for `users` and for `requests`.
+The MongoDB connections should be centralized to avoid it.  
+As is, there are similar *CRUD* methods for `users` and `requests`.
 
 ### Test output sample
 
-command: `make test`
+Command: `make test`
 
 ```log
 go clean -testcache && docker-compose up -d --build && sleep 2 &&  go test ./... -v && docker-compose down
@@ -101,18 +99,18 @@ Successfully built 30e855d86a61
 Successfully tagged request_golang:latest
 golang is up-to-date
 mongodb is up-to-date
-?   	request	[no test files]
+?     request [no test files]
 === RUN   TestNewToken
 --- PASS: TestNewToken (0.00s)
 === RUN   TestValidateToken
 --- PASS: TestValidateToken (0.00s)
 PASS
-ok  	request/auth	0.002s
+ok    request/auth  0.002s
 === RUN   TestDatabase
 --- PASS: TestDatabase (0.02s)
 PASS
-ok  	request/database	0.019s
-?   	request/ip	[no test files]
+ok    request/database  0.019s
+?     request/ip  [no test files]
 === RUN   TestAddDelReq
 --- PASS: TestAddDelReq (0.07s)
 === RUN   TestUpdateReq
@@ -126,7 +124,7 @@ ok  	request/database	0.019s
 === RUN   TestUserHashPassword
 --- PASS: TestUserHashPassword (0.90s)
 PASS
-ok  	request/models	8.007s
+ok    request/models  8.007s
 === RUN   TestPing
 --- PASS: TestPing (0.00s)
 === RUN   TestLogin
@@ -146,8 +144,8 @@ ok  	request/models	8.007s
 === RUN   TestUpdateRequest
 --- PASS: TestUpdateRequest (0.03s)
 PASS
-ok  	request/requests	6.864s
-?   	request/route	[no test files]
+ok    request/requests  6.864s
+?     request/route [no test files]
 === RUN   TestStress
     stress_test.go:34: Ping test
     stress_test.go:43: gimme the token
@@ -200,7 +198,7 @@ ok  	request/requests	6.864s
     stress_test.go:172: Easy, right?
 --- PASS: TestStress (39.08s)
 PASS
-ok  	request/stress	41.094s
+ok    request/stress  41.094s
 === RUN   TestFindHosts
 from [127 0 0 0] to [127 255 255 255]
 from [192 168 1 0] to [192 168 1 255]
@@ -210,7 +208,7 @@ from [172 21 0 0] to [172 21 255 255]
 from [172 18 0 0] to [172 18 255 255]
 --- PASS: TestFindHosts (0.00s)
 PASS
-ok  	request/utils	0.002s
+ok    request/utils 0.002s
 Stopping golang  ... done
 Stopping mongodb ... done
 Removing golang  ... done

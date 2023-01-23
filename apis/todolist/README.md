@@ -2,7 +2,7 @@
 
 ### Disclaimer
 
-Part of the code used in this challenge were inspired by the references linked below:
+Part of the code used in this challenge was inspired by the references linked below:
 
 - [Hamza Boughraira](https://medium.com/@hamza.boughraira)'s [Hands-On With JWT in Golang](https://betterprogramming.pub/hands-on-with-jwt-in-golang-8c986d1bb4c0) tutorial;
 - Golang & MongoDB usage documentation - [Quick Start: Golang & MongoDB](https://www.mongodb.com/golang):
@@ -18,10 +18,10 @@ Part of the code used in this challenge were inspired by the references linked b
 - [Docker Hub's MongoDB image usage instructions](https://hub.docker.com/_/mongo);
 - [Golang: tests and working directory](https://stackoverflow.com/questions/23847003/golang-tests-and-working-directory);
 - Finding MongoDB host:
-  - I begun to write a tool similar to [nmap](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjDpYr30pbvAhUPlFkKHdPLCygQFjAAegQIARAE&url=https%3A%2F%2Fnmap.org%2F&usg=AOvVaw3VbFWhboEWZ5njba0KMQQX) before figuring out how to use docker-compose image name for internal network communication. Below you can find the documentation that saved me and the reference used to start the address search at runtime:
+  - I began to write a tool similar to [nmap](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjDpYr30pbvAhUPlFkKHdPLCygQFjAAegQIARAE&url=https%3A%2F%2Fnmap.org%2F&usg=AOvVaw3VbFWhboEWZ5njba0KMQQX) before figuring out how to use docker-compose image name for internal network communication. Below, you can find the documentation that saved me and the reference used to start the address search at runtime:
   - [Networking in Compose](https://docs.docker.com/compose/networking/);
   - [Finding local addresses and masks](https://stackoverflow.com/a/53325915);
-    - I kept the started tool for curiosity;
+    - I kept the half-built tool for curiosity;
 
 > All commands should be executed on repository root folder  
 > Each time the project starts or the automated test are executed, the `todo` database is dropped and recreated with minimal documents.
@@ -31,7 +31,7 @@ Part of the code used in this challenge were inspired by the references linked b
 
 - run `docker-compose up -d` or `make default` to start the project and release the terminal;
 - run `docker-compose down` or `make stop` to stop the project;
-- *to test* run `make test` or `go test ./... -v` if the services are alredy running;
+- *to test* run `make test` or `go test ./... -v` if the services are already running;
 
 > All authenticated endpoints accept the token sent as follows:
 >
@@ -71,13 +71,13 @@ Part of the code used in this challenge were inspired by the references linked b
 
 ### Known issues
 
-The only issue I'm aware of is related to code repetition.  
-The mongodb connections should be centralized to avoid it.  
-As is, there are similar *CRUD* methods for `users` and for `requests`.
+The only issue I'm aware of is related to code repetition.
+The MongoDB connections should be centralized to avoid it.  
+As is, there are similar *CRUD* methods for `users` and `requests`.
 
 ### Test output sample
 
-command: `go test -v ./...`
+Command: `go` test -v ./...`
 
 ```log
 ?    todo [no test files]
