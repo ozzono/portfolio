@@ -1,0 +1,553 @@
+basePath: /api/v1
+definitions:
+  model.Rent:
+    properties:
+      canceledAt:
+        type: string
+      cost:
+        type: number
+      createdAt:
+        type: string
+      dropOffAt:
+        type: string
+      droppedAt:
+        type: string
+      pickUpAt:
+        type: string
+      pickedAt:
+        type: string
+      refundable:
+        type: number
+      status:
+        description: |-
+          scheduled - when PickUpAt != nil
+
+          active - when PickedAt != nil
+
+          delayed - when time.Now >  DropOffAt
+
+          inactive - when DroppedAt != nil
+
+          canceled - when CanceledAt !=nil
+        type: string
+      userUUID:
+        type: string
+      uuid:
+        type: string
+      vehicleUUID:
+        type: string
+    type: object
+  model.User:
+    properties:
+      contact:
+        type: string
+      name:
+        type: string
+      phoneNumber:
+        description: it's a string, although containing `number` in its name
+        type: string
+      uuid:
+        type: string
+    type: object
+  model.Vehicle:
+    properties:
+      archived:
+        type: boolean
+      available:
+        type: boolean
+      createdAt:
+        type: string
+      licensePlate:
+        type: string
+      model:
+        type: string
+      state:
+        type: string
+      updatedAt:
+        type: string
+      uuid:
+        type: string
+      year:
+        type: integer
+    type: object
+  utils.APIError:
+    properties:
+      error_code:
+        type: integer
+      error_message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: golang api - Car rental API
+  title: Car rental API
+paths:
+  /rent/:vehicle/:user/schedule:
+    put:
+      parameters:
+      - description: user uuid
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: vehicle uuid
+        in: path
+        name: vehicle_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "404":
+          description: record not found
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Schedules a vehicle rent
+      tags:
+      - controller
+  /rent/:vehicle/:user/update:
+    put:
+      parameters:
+      - description: user uuid
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: vehicle uuid
+        in: path
+        name: vehicle_id
+        required: true
+        type: string
+      - description: rent new status
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "404":
+          description: record not found
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Pickup or DropOff a vehicle
+      tags:
+      - controller
+  /rents/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/model.Rent'
+            type: array
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets all rents from the database
+      tags:
+      - rents
+    post:
+      parameters:
+      - description: rent data
+        in: body
+        name: rent
+        required: true
+        schema:
+          $ref: '#/definitions/model.Rent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Rent'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Adds a rent to the database
+      tags:
+      - rents
+  /rents/:rent:
+    delete:
+      parameters:
+      - description: rent uuid
+        in: path
+        name: rent
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Deletes a rent from the database by uuid
+      tags:
+      - rents
+    get:
+      parameters:
+      - description: rent uuid
+        in: path
+        name: rent
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Rent'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "404":
+          description: record not found
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets a rent from the database filtered by uuid
+      tags:
+      - rents
+    put:
+      parameters:
+      - description: rent data
+        in: body
+        name: rent
+        required: true
+        schema:
+          $ref: '#/definitions/model.Rent'
+      - description: rent uuid
+        in: path
+        name: rent_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Rent'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Updates a rent from the database filtered by uuid
+      tags:
+      - rents
+  /users/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets all users from the database
+      tags:
+      - users
+    post:
+      parameters:
+      - description: user data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Adds a user to the database
+      tags:
+      - users
+  /users/:user:
+    delete:
+      parameters:
+      - description: user uuid
+        in: path
+        name: user
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Deletes a user from the database by uuid
+      tags:
+      - users
+    get:
+      parameters:
+      - description: user uuid
+        in: path
+        name: user
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "404":
+          description: record not found
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets a user from the database filtered by uuid
+      tags:
+      - users
+    put:
+      parameters:
+      - description: user data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      - description: user uuid
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Updatess a user from the database filtered by uuid
+      tags:
+      - users
+  /vehicles/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/model.Vehicle'
+            type: array
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets all vehicles from the database
+      tags:
+      - vehicles
+    post:
+      parameters:
+      - description: vehicle data
+        in: body
+        name: vehicle
+        required: true
+        schema:
+          $ref: '#/definitions/model.Vehicle'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Vehicle'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Adds a vehicle to the database
+      tags:
+      - vehicles
+  /vehicles/:vehicle:
+    delete:
+      parameters:
+      - description: vehicle uuid
+        in: path
+        name: vehicle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Deletes a vehicle from the database by uuid
+      tags:
+      - vehicles
+    get:
+      parameters:
+      - description: vehicle uuid
+        in: path
+        name: vehicle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Vehicle'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "404":
+          description: record not found
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Gets a vehicle from the database filtered by uuid
+      tags:
+      - vehicles
+    put:
+      parameters:
+      - description: vehicle data
+        in: body
+        name: vehicle
+        required: true
+        schema:
+          $ref: '#/definitions/model.Vehicle'
+      - description: vehicle uuid
+        in: path
+        name: vehicle_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/model.Vehicle'
+        "400":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/utils.APIError'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/utils.APIError'
+      summary: Updatess a vehicle from the database filtered by uuid
+      tags:
+      - vehicles
+swagger: "2.0"
