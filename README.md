@@ -3,6 +3,7 @@
 Here it's possible to find some of the code I developed throughout the time, be it as training or as a coding challenge accomplishment.
 
 - APIs
+  - [car-rental](./apis/car-rental)
   - [request](./apis/request)
     - Uses docker, docker-compose, unit-tested, REST API, MongoDB, Makefile.
     - Last update: April 2021
