@@ -1,10 +1,10 @@
 package model
 
 import (
+	"car-rental/utils"
 	"fmt"
 	"time"
 
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -15,9 +15,9 @@ var (
 )
 
 type Rent struct {
-	UUID        uuid.UUID `json:"uuid,-" gorm:"primaryKey"`
-	UserUUID    uuid.UUID `gorm:"foreignKey"`
-	VehicleUUID uuid.UUID `gorm:"foreignKey"`
+	UUID        utils.UUID `json:"uuid,-" gorm:"primaryKey"`
+	UserUUID    utils.UUID `gorm:"foreignKey"`
+	VehicleUUID utils.UUID `gorm:"foreignKey"`
 	Cost        float64
 	Refundable  float64
 	CreatedAt   time.Time
@@ -82,13 +82,11 @@ func (r Rent) LogText() string {
 }
 
 func (r *Rent) Valid() error {
-
-	if r.UserUUID.IsNil() {
-		return errors.Wrap(InvalidUUIDErr, "user_id")
+	if err := r.UserUUID.Valid(); err != nil {
+		return errors.Wrap(err, "invalid UserUUID")
 	}
-
-	if r.VehicleUUID.IsNil() {
-		return errors.Wrap(InvalidUUIDErr, "vehicle_id")
+	if err := r.VehicleUUID.Valid(); err != nil {
+		return errors.Wrap(err, "invalid VehicleUUID")
 	}
 	return nil
 }

@@ -26,16 +26,17 @@ go test -v ./...
 
 > This list follows a personal priority order.
 
-- Add Makefile shortcuts;
-- Improve types and interfaces nesting;
-- Dockerize database and API service;
-- Implement authentication;
-- Implement scheduling;
-- Implement notification;
-- Implement caching;
-- Implement pubsub;
-- Improve logs - more needed and used if previous topics get implemented;
-- Add more comments to methods;
+- [x] Add Makefile shortcuts;
+- [x] Using SQLite instead of non-dockerized mysql;
+- [ ] Dockerize API service;
+- [ ] Improve types and interfaces nesting;
+- [ ] Implement authentication;
+- [ ] Implement scheduling;
+- [ ] Implement notification;
+- [ ] Implement caching;
+- [ ] Implement pubsub;
+- [ ] Improve logs - more needed and used if previous topics get implemented;
+- [ ] Add more comments to methods;
 
 ---
 

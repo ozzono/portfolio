@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -26,7 +25,7 @@ func NewController(l *zap.SugaredLogger, c repository.Client) *Controller {
 	return &Controller{log: l, client: c}
 }
 
-func (c *Controller) Schedule(vehicleID uuid.UUID, userID uuid.UUID, pickUp, dropOff time.Time) (*model.Rent, error) {
+func (c *Controller) Schedule(vehicleID utils.UUID, userID utils.UUID, pickUp, dropOff time.Time) (*model.Rent, error) {
 	_, err := c.client.GetVehicleByUUID(vehicleID)
 	if err != nil {
 		return nil, errors.Wrap(err, "c.client.GetVehicleByUUID")
@@ -78,7 +77,7 @@ func (c *Controller) Schedule(vehicleID uuid.UUID, userID uuid.UUID, pickUp, dro
 	return rent, nil
 }
 
-func (c *Controller) PickupOrDropOff(vehicleID uuid.UUID, userID uuid.UUID, status string) error {
+func (c *Controller) PickupOrDropOff(vehicleID utils.UUID, userID utils.UUID, status string) error {
 	if status != "active" && status != "inactive" && status != "canceled" {
 		return errors.Errorf("invalid status %s; must be `active` or `inactive`", status)
 	}

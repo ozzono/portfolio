@@ -5,10 +5,11 @@ import (
 	"github.com/pkg/errors"
 
 	"car-rental/internal/model"
+	"car-rental/utils"
 )
 
 // GetUserByUUID returns User with given uuid
-func (c client) GetUserByUUID(uuid uuid.UUID) (*model.User, error) {
+func (c client) GetUserByUUID(uuid utils.UUID) (*model.User, error) {
 	user := &model.User{}
 	if result := c.First(user, "uuid = ?", uuid); result.Error != nil {
 		return nil, errors.Wrap(result.Error, "c.First")
@@ -26,7 +27,7 @@ func (c client) GetAllUsers() ([]*model.User, error) {
 }
 
 // DeleteUser returns User with given uuid
-func (c client) DeleteUser(uuid uuid.UUID) error {
+func (c client) DeleteUser(uuid utils.UUID) error {
 	if uuid.IsNil() {
 		return errors.Wrap(ErrInvalidUUID, "cannot be nil")
 	}
@@ -41,7 +42,7 @@ func (c client) DeleteUser(uuid uuid.UUID) error {
 // AddUser adds a new User and return it with new uuid
 func (c client) AddUser(user *model.User) (*model.User, error) {
 	newUUID, _ := uuid.NewV4()
-	user.UUID = newUUID
+	user.UUID = utils.UUID{UUID: newUUID}
 	if result := c.Create(user); result.Error != nil {
 		return nil, errors.Wrap(result.Error, "c.Create")
 	}
@@ -49,7 +50,7 @@ func (c client) AddUser(user *model.User) (*model.User, error) {
 }
 
 // UpdateUser updates a User
-func (c client) UpdateUser(user *model.User, uuid uuid.UUID) error {
+func (c client) UpdateUser(user *model.User, uuid utils.UUID) error {
 	if user.UUID.IsNil() {
 		return errors.Wrap(ErrInvalidUUID, "cannot be nil")
 	}

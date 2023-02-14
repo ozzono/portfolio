@@ -27,7 +27,7 @@ func (h *Handler) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := h.Client.GetUserByUUID(id)
+	user, err := h.Client.GetUserByUUID(utils.UUID{UUID: id})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.HTTPErrJSON(ctx, http.StatusNotFound, "record not found")
 		return
@@ -106,9 +106,9 @@ func (h *Handler) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	user.UUID = id
+	user.UUID = utils.UUID{UUID: id}
 
-	err = h.Client.UpdateUser(user, id)
+	err = h.Client.UpdateUser(user, utils.UUID{UUID: id})
 	if err != nil {
 		h.log.Error(errors.Wrap(err, "h.Client.UpdateUser"))
 		utils.HTTPErrJSON(ctx, http.StatusInternalServerError, "contact system admin")
@@ -133,7 +133,7 @@ func (h *Handler) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Client.DeleteUser(id)
+	err = h.Client.DeleteUser(utils.UUID{UUID: id})
 
 	if err != nil {
 		h.log.Error(errors.Wrap(err, "h.Client.DeleteUser"))

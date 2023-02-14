@@ -1,19 +1,20 @@
-package repository
+package mock
 
 import (
 	"car-rental/internal/model"
+	"car-rental/utils"
 	"time"
-
-	"github.com/gofrs/uuid"
 )
+
+type Repo struct{}
 
 var (
 	mockUser     = &model.User{}
-	mockUsers    = map[uuid.UUID]*model.User{}
+	mockUsers    = map[utils.UUID]*model.User{}
 	mockVehicle  = &model.Vehicle{}
-	mockVehicles = map[uuid.UUID]*model.Vehicle{}
+	mockVehicles = map[utils.UUID]*model.Vehicle{}
 	mockRent     = &model.Rent{}
-	mockRents    = map[uuid.UUID]*model.Rent{}
+	mockRents    = map[utils.UUID]*model.Rent{}
 )
 
 func init() {
@@ -38,8 +39,4 @@ func init() {
 		CreatedAt:   time.Now(),
 	}
 	mockRents[mockRent.UUID] = mockRent
-}
-
-func NewMockClient() Client {
-	return testSuite{}
 }

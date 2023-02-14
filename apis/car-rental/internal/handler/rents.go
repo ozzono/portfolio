@@ -32,7 +32,7 @@ func (h *Handler) GetRent(ctx *gin.Context) {
 		return
 	}
 
-	rent, err := h.Client.GetRentByUUID(id)
+	rent, err := h.Client.GetRentByUUID(utils.UUID{UUID: id})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.HTTPErrJSON(ctx, http.StatusNotFound, "record not found")
 		return
@@ -115,9 +115,9 @@ func (h *Handler) UpdateRent(ctx *gin.Context) {
 		return
 	}
 
-	rent.UUID = id
+	rent.UUID = utils.UUID{UUID: id}
 
-	err = h.Client.UpdateRent(rent, id)
+	err = h.Client.UpdateRent(rent, utils.UUID{UUID: id})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.HTTPErrJSON(ctx, http.StatusNotFound, "record not found")
 		return
@@ -145,7 +145,7 @@ func (h *Handler) DeleteRent(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Client.DeleteRent(id)
+	err = h.Client.DeleteRent(utils.UUID{UUID: id})
 	if err != nil {
 		h.log.Error(errors.Wrap(err, "h.Client.DeleteRent"))
 		utils.HTTPErrJSON(ctx, http.StatusInternalServerError, "contact system admin")
@@ -208,7 +208,7 @@ func (h *Handler) ScheduleVehicle(ctx *gin.Context) {
 		return
 	}
 
-	rent, err := h.ctrl.Schedule(vehicleID, userID, pickUp, dropOff)
+	rent, err := h.ctrl.Schedule(utils.UUID{UUID: vehicleID}, utils.UUID{UUID: userID}, pickUp, dropOff)
 	if err != nil {
 		h.log.Errorf("h.ctrl.Schedule - %v", err)
 		utils.HTTPErrJSON(ctx, http.StatusBadRequest,
@@ -253,7 +253,7 @@ func (h *Handler) PickupOrDropOffVehicle(ctx *gin.Context) {
 	}
 
 	fmt.Println(h == nil)
-	err = h.ctrl.PickupOrDropOff(vehicleID, userID, status)
+	err = h.ctrl.PickupOrDropOff(utils.UUID{UUID: vehicleID}, utils.UUID{UUID: userID}, status)
 	if err != nil {
 		h.log.Errorf("h.ctrl.PickupOrDropOff - %v", err)
 		utils.HTTPErrJSON(ctx, http.StatusBadRequest, "contact system admin")

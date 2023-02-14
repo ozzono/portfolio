@@ -1,13 +1,12 @@
 package model
 
 import (
+	"car-rental/utils"
 	"fmt"
-
-	"github.com/gofrs/uuid"
 )
 
 type User struct {
-	UUID    uuid.UUID `json:"uuid,-" gorm:"primaryKey"`
+	UUID    utils.UUID `json:"uuid,-" gorm:"primaryKey"`
 	Name    string
 	Contact string
 

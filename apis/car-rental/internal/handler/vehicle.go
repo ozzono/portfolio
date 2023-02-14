@@ -27,7 +27,7 @@ func (h *Handler) GetVehicle(ctx *gin.Context) {
 		return
 	}
 
-	vehicle, err := h.Client.GetVehicleByUUID(id)
+	vehicle, err := h.Client.GetVehicleByUUID(utils.UUID{UUID: id})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.HTTPErrJSON(ctx, http.StatusNotFound, "record not found")
 		return
@@ -106,9 +106,9 @@ func (h *Handler) UpdateVehicle(ctx *gin.Context) {
 		return
 	}
 
-	vehicle.UUID = id
+	vehicle.UUID = utils.UUID{UUID: id}
 
-	err = h.Client.UpdateVehicle(vehicle, id)
+	err = h.Client.UpdateVehicle(vehicle, utils.UUID{UUID: id})
 	if err != nil {
 		h.log.Error(errors.Wrap(err, "h.Client.UpdateVehicle"))
 		utils.HTTPErrJSON(ctx, http.StatusInternalServerError, "contact system admin")
@@ -133,7 +133,7 @@ func (h *Handler) DeleteVehicle(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Client.DeleteVehicle(id)
+	err = h.Client.DeleteVehicle(utils.UUID{UUID: id})
 	if err != nil {
 		h.log.Error(errors.Wrap(err, "h.Client.DeleteVehicle"))
 		utils.HTTPErrJSON(ctx, http.StatusInternalServerError, "contact system admin")

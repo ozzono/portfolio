@@ -12,7 +12,7 @@ var (
 )
 
 func (ts testSuite) Test20CreateVehicle() {
-	vehicles, err := ts.GetAllVehicles()
+	vehicles, err := ts.client.GetAllVehicles()
 	assert.NoError(ts.T(), err)
 	originalLenVehicles = len(vehicles)
 	newVehicle := &model.Vehicle{
@@ -21,19 +21,19 @@ func (ts testSuite) Test20CreateVehicle() {
 		State:        "State         ",
 		Year:         2000,
 	}
-	testVehicle, err = ts.AddVehicle(newVehicle)
+	testVehicle, err = ts.client.AddVehicle(newVehicle)
 	assert.NoError(ts.T(), err)
 }
 
 func (ts testSuite) Test3GetVehicle() {
-	vehicle, err := ts.GetVehicleByUUID(testVehicle.UUID)
+	vehicle, err := ts.client.GetVehicleByUUID(testVehicle.UUID)
 	assert.NoError(ts.T(), err)
 	assert.Equal(ts.T(), vehicle, testVehicle)
 	testVehicle.CreatedAt = vehicle.CreatedAt
 }
 
 func (ts testSuite) Test4GetAllVehicle() {
-	vehicles, err := ts.GetAllVehicles()
+	vehicles, err := ts.client.GetAllVehicles()
 	assert.NoError(ts.T(), err)
 	assert.Equal(ts.T(), len(vehicles), originalLenVehicles+1)
 	found := false
@@ -54,7 +54,7 @@ func (ts testSuite) Test5UpdateVehicle() {
 	newVehicle.Archived = !testVehicle.Archived
 	newVehicle.Available = !testVehicle.Available
 
-	err := ts.UpdateVehicle(newVehicle, newVehicle.UUID)
+	err := ts.client.UpdateVehicle(newVehicle, newVehicle.UUID)
 	assert.NoError(ts.T(), err)
 	assert.NotEqual(ts.T(), newVehicle.Archived, testVehicle.Archived)
 	assert.NotEqual(ts.T(), newVehicle.Available, testVehicle.Available)

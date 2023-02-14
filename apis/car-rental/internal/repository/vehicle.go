@@ -5,10 +5,11 @@ import (
 	"github.com/pkg/errors"
 
 	"car-rental/internal/model"
+	"car-rental/utils"
 )
 
 // GetVehicleByUUID returns Vehicle with given uuid
-func (c client) GetVehicleByUUID(uuid uuid.UUID) (*model.Vehicle, error) {
+func (c client) GetVehicleByUUID(uuid utils.UUID) (*model.Vehicle, error) {
 	vehicle := &model.Vehicle{}
 	if result := c.First(vehicle, "uuid = ?", uuid); result.Error != nil {
 		return nil, errors.Wrap(result.Error, "c.First")
@@ -26,7 +27,7 @@ func (c client) GetAllVehicles() ([]*model.Vehicle, error) {
 }
 
 // DeleteVehicle returns Vehicle with given uuid
-func (c client) DeleteVehicle(uuid uuid.UUID) error {
+func (c client) DeleteVehicle(uuid utils.UUID) error {
 	if uuid.IsNil() {
 		return errors.Wrap(ErrInvalidUUID, "cannot be nil")
 	}
@@ -41,7 +42,7 @@ func (c client) DeleteVehicle(uuid uuid.UUID) error {
 // AddVehicle adds a new Vehicle and return it with new uuid
 func (c client) AddVehicle(vehicle *model.Vehicle) (*model.Vehicle, error) {
 	newUUID, _ := uuid.NewV4()
-	vehicle.UUID = newUUID
+	vehicle.UUID = utils.UUID{UUID: newUUID}
 	if result := c.Create(vehicle); result.Error != nil {
 		return nil, errors.Wrap(result.Error, "c.Create")
 	}
@@ -49,7 +50,7 @@ func (c client) AddVehicle(vehicle *model.Vehicle) (*model.Vehicle, error) {
 }
 
 // UpdateVehicle updates a Vehicle
-func (c client) UpdateVehicle(vehicle *model.Vehicle, uuid uuid.UUID) error {
+func (c client) UpdateVehicle(vehicle *model.Vehicle, uuid utils.UUID) error {
 	if vehicle.UUID.IsNil() {
 		return errors.Wrap(ErrInvalidUUID, "cannot be nil")
 	}

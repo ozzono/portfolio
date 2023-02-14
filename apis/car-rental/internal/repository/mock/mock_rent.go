@@ -1,14 +1,15 @@
-package repository
+package mock
 
 import (
 	"car-rental/internal/model"
+	"car-rental/utils"
 	"time"
 
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 )
 
-func (ts testSuite) GetRentByUUID(uuid uuid.UUID) (*model.Rent, error) {
+func (m Repo) GetRentByUUID(uuid utils.UUID) (*model.Rent, error) {
 	rent, ok := mockRents[uuid]
 	if ok {
 		return rent, nil
@@ -16,7 +17,7 @@ func (ts testSuite) GetRentByUUID(uuid uuid.UUID) (*model.Rent, error) {
 	return nil, gorm.ErrRecordNotFound
 }
 
-func (ts testSuite) GetAllRents() ([]*model.Rent, error) {
+func (m Repo) GetAllRents() ([]*model.Rent, error) {
 	output := []*model.Rent{}
 	for key := range mockRents {
 		output = append(output, mockRents[key])
@@ -24,7 +25,7 @@ func (ts testSuite) GetAllRents() ([]*model.Rent, error) {
 	return output, nil
 }
 
-func (ts testSuite) DeleteRent(uuid uuid.UUID) error {
+func (m Repo) DeleteRent(uuid utils.UUID) error {
 	_, ok := mockRents[uuid]
 	if ok {
 		delete(mockRents, uuid)
@@ -33,15 +34,15 @@ func (ts testSuite) DeleteRent(uuid uuid.UUID) error {
 	return gorm.ErrRecordNotFound
 }
 
-func (ts testSuite) AddRent(rent *model.Rent) (*model.Rent, error) {
+func (m Repo) AddRent(rent *model.Rent) (*model.Rent, error) {
 	id, _ := uuid.NewV4()
-	rent.UUID = id
+	rent.UUID = utils.UUID{UUID: id}
 	rent.CreatedAt = time.Now()
 	mockRents[rent.UUID] = rent
 	return rent, nil
 }
 
-func (ts testSuite) UpdateRent(rent *model.Rent, uuid uuid.UUID) error {
+func (m Repo) UpdateRent(rent *model.Rent, uuid utils.UUID) error {
 	_, ok := mockRents[uuid]
 	if !ok {
 		return gorm.ErrRecordNotFound
@@ -51,7 +52,7 @@ func (ts testSuite) UpdateRent(rent *model.Rent, uuid uuid.UUID) error {
 	return nil
 }
 
-func (ts testSuite) GetAllVehicleRents(vehicle *model.Vehicle) ([]*model.Rent, error) {
+func (m Repo) GetAllVehicleRents(vehicle *model.Vehicle) ([]*model.Rent, error) {
 	output := []*model.Rent{}
 	for key := range mockRents {
 		if mockRents[key].UUID == vehicle.UUID {
@@ -63,7 +64,7 @@ func (ts testSuite) GetAllVehicleRents(vehicle *model.Vehicle) ([]*model.Rent, e
 	}
 	return output, nil
 }
-func (ts testSuite) GetAllUserRents(user *model.User) ([]*model.Rent, error) {
+func (m Repo) GetAllUserRents(user *model.User) ([]*model.Rent, error) {
 	output := []*model.Rent{}
 	for key := range mockRents {
 		if mockRents[key].UUID == user.UUID {
@@ -75,12 +76,12 @@ func (ts testSuite) GetAllUserRents(user *model.User) ([]*model.Rent, error) {
 	}
 	return output, nil
 }
-func (ts testSuite) GetRentByVehicleNUserUUID(userID, vehicleID uuid.UUID) (*model.Rent, error) {
-	if vehicleID.IsNil() {
-		return nil, ErrInvalidUUID
+func (m Repo) GetRentByVehicleNUserUUID(userID, vehicleID utils.UUID) (*model.Rent, error) {
+	if err := vehicleID.Valid(); err != nil {
+		return nil, err
 	}
-	if userID.IsNil() {
-		return nil, ErrInvalidUUID
+	if err := userID.Valid(); err != nil {
+		return nil, err
 	}
 	for _, rent := range mockRents {
 		if rent.VehicleUUID == vehicleID && rent.UserUUID == userID {

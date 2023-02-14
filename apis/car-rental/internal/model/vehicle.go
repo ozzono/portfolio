@@ -1,15 +1,14 @@
 package model
 
 import (
+	"car-rental/utils"
 	"fmt"
 	"time"
-
-	"github.com/gofrs/uuid"
 )
 
 // Vehicle ...
 type Vehicle struct {
-	UUID         uuid.UUID `json:"uuid,-" gorm:"primaryKey"`
+	UUID         utils.UUID `json:"uuid,-" gorm:"primaryKey"`
 	Model        string
 	LicensePlate string `gorm:"size:255"`
 	State        string `gorm:"size:255"`

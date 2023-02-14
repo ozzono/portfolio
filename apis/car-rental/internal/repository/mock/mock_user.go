@@ -1,13 +1,14 @@
-package repository
+package mock
 
 import (
 	"car-rental/internal/model"
+	"car-rental/utils"
 
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 )
 
-func (tc testSuite) GetUserByUUID(uuid uuid.UUID) (*model.User, error) {
+func (m Repo) GetUserByUUID(uuid utils.UUID) (*model.User, error) {
 	user, ok := mockUsers[uuid]
 	if ok {
 		return user, nil
@@ -15,7 +16,7 @@ func (tc testSuite) GetUserByUUID(uuid uuid.UUID) (*model.User, error) {
 	return nil, gorm.ErrRecordNotFound
 }
 
-func (tc testSuite) GetAllUsers() ([]*model.User, error) {
+func (m Repo) GetAllUsers() ([]*model.User, error) {
 	output := []*model.User{}
 	for key := range mockUsers {
 		output = append(output, mockUsers[key])
@@ -23,7 +24,7 @@ func (tc testSuite) GetAllUsers() ([]*model.User, error) {
 	return output, nil
 }
 
-func (tc testSuite) DeleteUser(uuid uuid.UUID) error {
+func (m Repo) DeleteUser(uuid utils.UUID) error {
 	_, ok := mockUsers[uuid]
 	if ok {
 		delete(mockUsers, uuid)
@@ -32,14 +33,14 @@ func (tc testSuite) DeleteUser(uuid uuid.UUID) error {
 	return gorm.ErrRecordNotFound
 }
 
-func (tc testSuite) AddUser(user *model.User) (*model.User, error) {
+func (m Repo) AddUser(user *model.User) (*model.User, error) {
 	id, _ := uuid.NewV4()
-	user.UUID = id
+	user.UUID = utils.UUID{UUID: id}
 	mockUsers[user.UUID] = user
 	return user, nil
 }
 
-func (tc testSuite) UpdateUser(user *model.User, uuid uuid.UUID) error {
+func (m Repo) UpdateUser(user *model.User, uuid utils.UUID) error {
 	_, ok := mockUsers[uuid]
 	if !ok {
 		return gorm.ErrRecordNotFound
