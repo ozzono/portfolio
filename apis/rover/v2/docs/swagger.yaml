@@ -1,0 +1,111 @@
+basePath: /v2
+definitions:
+  handler.APIError:
+    properties:
+      errorCode:
+        type: integer
+      errorMessage:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a Mars rover control panel
+  title: Mars rover control panel
+  version: "2.0"
+paths:
+  /plateau/set:
+    get:
+      description: Sets a new plateau or blanks the existent one
+      parameters:
+      - description: Plateau width
+        in: query
+        name: width
+        required: true
+        type: integer
+      - description: Plateau height
+        in: query
+        name: height
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: width and height are required
+          schema:
+            $ref: '#/definitions/handler.APIError'
+      summary: Sets the Plateau
+  /plateau/show:
+    get:
+      description: shows current plateau state
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Sets the Plateau
+  /rover:
+    put:
+      description: adds a new rover to the plateau
+      parameters:
+      - description: x coordinate
+        in: query
+        name: x
+        required: true
+        type: integer
+      - description: y coordinate
+        in: query
+        name: "y"
+        required: true
+        type: integer
+      - description: rover direction
+        in: query
+        name: direction
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: int
+        "400":
+          description: width, height and direction are required
+          schema:
+            $ref: '#/definitions/handler.APIError'
+      summary: Land rover
+  /rover/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Moves the rover in the plateau
+      parameters:
+      - description: rover id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: rover movement
+        in: query
+        name: movement
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: int
+        "400":
+          description: invalid movement
+          schema:
+            $ref: '#/definitions/handler.APIError'
+        "404":
+          description: rover not found
+          schema:
+            $ref: '#/definitions/handler.APIError'
+      summary: Moves the Rover
+swagger: "2.0"

@@ -1,0 +1,167 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a Mars rover control panel",
+        "title": "Mars rover control panel",
+        "contact": {},
+        "version": "2.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/v2",
+    "paths": {
+        "/plateau/set": {
+            "get": {
+                "description": "Sets a new plateau or blanks the existent one",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Sets the Plateau",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Plateau width",
+                        "name": "width",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Plateau height",
+                        "name": "height",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "width and height are required",
+                        "schema": {
+                            "$ref": "#/definitions/handler.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/plateau/show": {
+            "get": {
+                "description": "shows current plateau state",
+                "summary": "Sets the Plateau",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/rover": {
+            "put": {
+                "description": "adds a new rover to the plateau",
+                "summary": "Land rover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "x coordinate",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "y coordinate",
+                        "name": "y",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "rover direction",
+                        "name": "direction",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "width, height and direction are required",
+                        "schema": {
+                            "$ref": "#/definitions/handler.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/rover/{id}": {
+            "get": {
+                "description": "Moves the rover in the plateau",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Moves the Rover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "rover id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "rover movement",
+                        "name": "movement",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid movement",
+                        "schema": {
+                            "$ref": "#/definitions/handler.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "rover not found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.APIError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.APIError": {
+            "type": "object",
+            "properties": {
+                "errorCode": {
+                    "type": "integer"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
