@@ -1,9 +1,12 @@
 # Code Portfolio Repo
 
-Here it's possible to find some of the code I developed throughout the time, be it as training or as a coding challenge accomplishment.
+Here it's possible to find some of the code I developed throughout time, whether as training or as a coding challenge accomplishment.
 
 - APIs
+  - [mars-rover](./apis/rover/)
+    - Uses Resp API, unit-tested, and OpenAPI documentation.
   - [car-rental](./apis/car-rental)
+    - Uses REST API, MySQL, unit-tested, integration-tested, Makefile, and OpenAPI documentation.
   - [request](./apis/request)
     - Uses docker, docker-compose, unit-tested, REST API, MongoDB, Makefile.
     - Last update: April 2021
