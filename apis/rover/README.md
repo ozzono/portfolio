@@ -1,4 +1,4 @@
-# Rover Code Challenge
+# Mars Rovers
 
 You can find the challenge description [here](./DESCRIPTION.md).
 

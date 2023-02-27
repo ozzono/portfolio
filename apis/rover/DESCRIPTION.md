@@ -1,12 +1,4 @@
-# Test Rover
-
-## Description
-
-We are assessing a number of things, including the design aspect of your solution, code hygiene, readability and code structure (how easy it is for another programmer to grasp what your code does), reliability and robustness (are errors properly handled?), but mostly we are looking for good coding practices and your object oriented programming skills. We'll also look for automated tests.  
-
-You may not use any external libraries to solve this problem, but you may use external libraries or tools for building or testing purposes. Specifically, you may use unit testing libraries or build tools available for your chosen language (for example, JUnit). Please also include a brief explanation of your design and assumptions along with your code and commit your changes in a way that will help us understand your design and coding decisions, as well as how you came up with the final solution.  
-
-There must be a way to supply the application with the input data via text file. The application must run. You should provide sufficient evidence that your solution is complete by, as a minimum, indicating that it works correctly against the supplied test data. Please note that you will be assessed on your judgment as well as your execution.
+# Mars Rovers
 
 ## Problem
 
